@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ColaboradoresConfig(AppConfig):
+class OrcamentoConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'colaboradores'
+    name = 'orcamento'
