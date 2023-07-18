@@ -15,8 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from orcamento import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', orcamento)
+    path('', views.orcamento_index),
+    # path('orcamento/<int:pk>/', views.orcamento_detail),
+    path('cliente/', views.cliente_index),
+    # path('cliente/<int:pk>/', views.cliente_detail),
+    # path('fornecedor/', views.fornecedor_index),
+    # path('fornecedor/<int:pk>/', views.fornecedor_detail),
+    # path('produto/', views.produto_index),
+    # path('produto/<int:pk>', views.produto_detail),
 ]
