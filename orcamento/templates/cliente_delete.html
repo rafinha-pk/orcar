@@ -1,0 +1,10 @@
+<div class="main">
+    <!-- Create a Form -->
+    <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        Realmente quer apagar {{ data.nome }}?
+        <input type="submit" value="Yes" />
+        <a href="/cliente/">Cancel </a>
+    </form>
+</div>
