@@ -13,3 +13,6 @@ class ClienteForm(forms.ModelForm):
 			"email2",
 			"obs",
 		]
+	criador = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+	data_criacao = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+	data_ultimo = forms.IntegerField(widget=forms.HiddenInput(), required=False)

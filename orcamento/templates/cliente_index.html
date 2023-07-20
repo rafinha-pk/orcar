@@ -1,7 +1,7 @@
 <div class="main">
-    <br>1
+    <br>
     {% for data in dataset %}.
-    {{ data.pk }} - 
+    <a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a> - 
     {{ data.nome }}<br/>
     {{ data.contato }}<br/>
     <hr/>
