@@ -48,6 +48,8 @@ def cliente_atualiza(request, pk):
 	form = ClienteForm(request.POST or None, instance = obj)
 
 	if form.is_valid():
+		criador = User.objects.get(pk=form.criador)
+		form.instance.criador = criador
 		form.save()
 		return HttpResponseRedirect("/cliente/" + str(pk))
 	context["form"] = form

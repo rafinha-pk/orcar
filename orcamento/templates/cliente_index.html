@@ -1,11 +1,18 @@
-<div class="main">
-    <br>
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container text-center">
+    <div class="row">
+        <div class="col">ID</div>
+        <div class="col">Nome</div> 
+        <div class="col">Contato</div>
+    </div>
     {% for data in dataset %}.
-    <a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a> - 
-    {{ data.nome }}<br/>
-    {{ data.contato }}<br/>
-    <hr/>
-
- 
+    <div class="row">
+        <div class="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a></div>
+        <div class="col">{{ data.nome }}</div> 
+        <div class="col">{{ data.contato }}</div>
+    </div>
     {% endfor %}
- 
+</div>
+{% endblock %}

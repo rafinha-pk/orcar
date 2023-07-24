@@ -1,12 +1,25 @@
-<div class="main">
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container">
     <form method="POST">
         <!-- Security token by Django -->
         {% csrf_token %}
- 
-        <!-- form as paragraph -->
-        {{ form.as_p }}
+        <div class="row">
+            <!-- form as paragraph -->
+            <!-- {{ form.as_ul }} -->
+            <td class="col">Nome: </td><td class="col">{{ form.nome }}</td>
+            <td class="col">Telefone: </td><td class="col">{{ form.telefone }}</td>
+            <td class="col">Telefone 2: </td><td class="col">{{ form.telefone2 }}</td>
+            <td class="col">Contato: </td><td class="col">{{ form.contato }}</td>
+            <td class="col">E-mail: </td><td class="col">{{ form.email }}</td>
+            <td class="col">E-mail 2: </td><td class="col">{{ form.email2 }}</td>
+            <td class="col">Obs: </td><td class="col">{{ form.obs }}</td>
+            {{ form.criador }}{{ form.data_criacao }}{{ form.data_ultimo }}
+        </div>
  
         <input type="submit" value="Update">
     </form>
  
 </div>
+{% endblock %}

@@ -1,18 +1,31 @@
+from datetime import date
+
+
 from django import forms
 from .models import Clientes
 
 class ClienteForm(forms.ModelForm):
 	class Meta:
 		model = Clientes
-		fields = [
-			"nome",
-			"telefone",
-			"telefone2",
-			"contato",
-			"email",
-			"email2",
-			"obs",
-		]
+		#fields = [
+		#	"nome",
+		#	"telefone",
+		#	"telefone2",
+		#	"contato",
+		#	"email",
+		#	"email2",
+		#	"obs",
+		#]
+		fields = "__all__"
+	nome = forms.CharField(max_length=250)
+	telefone = forms.CharField(max_length=20, required=False)
+	telefone2 = forms.CharField(max_length=20, required=False)
+	contato = forms.CharField(max_length=250, required=False)
+	email = forms.EmailField(max_length=250, required=False)
+	email2 = forms.EmailField(max_length=250, required=False)
+	obs = forms.CharField(widget=forms.Textarea, required=False)
+
+
 	criador = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 	data_criacao = forms.IntegerField(widget=forms.HiddenInput(), required=False)
-	data_ultimo = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+	data_ultimo = forms.IntegerField(widget=forms.HiddenInput(), initial=date.today())

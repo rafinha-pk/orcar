@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+ 
+{% block content %}
 <div class="main">
     <form method="POST" enctype="multipart/form-data">
         <!-- Security token by Django -->
@@ -10,3 +13,4 @@
     </form>
  
 </div>
+{% endblock %}
