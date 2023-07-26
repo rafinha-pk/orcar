@@ -9,3 +9,13 @@ body
 	border = 0;
 	font-family: Ubuntu;
 }
+a
+{
+	text-decoration: none;
+	color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color)));
+}
+tr:hover th, tr:hover th a
+{
+	 background-color: var(--bs-light);
+	 color: var(--bs-dark);
+}

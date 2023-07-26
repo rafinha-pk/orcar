@@ -14,8 +14,11 @@ def orcamento_index(request):
 
 def cliente_index(request):
 	context = {}
-	context["dataset"] = Clientes.objects.all().order_by('-pk')
-
+	if request.POST:
+		context["dataset"] = Clientes.objects.all().filter(nome__icontains=request.POST.get('busca')).order_by('-pk')
+	else:
+		context["dataset"] = Clientes.objects.all().order_by('-pk')
+		
 	return render(request, "cliente_index.html", context)
 
 def cliente_detail(request, pk):

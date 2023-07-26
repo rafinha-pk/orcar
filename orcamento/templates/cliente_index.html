@@ -2,17 +2,43 @@
  
 {% block content %}
 <div class="container text-center">
+    <br>
     <div class="row">
-        <div class="col">ID</div>
-        <div class="col">Nome</div> 
-        <div class="col">Contato</div>
+        <div class="col col-2"></div>
+        <div class="col col-8 text-center">
+            <form class="d-flex" role="search" method="POST" action="{% url 'cliente' %}">
+                {% csrf_token %}
+                <input type="search" class="form-control me-2 w-100" name="busca" placeholder="Buscar" aria-label="Buscar">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="col col-2">
+            <a href="{% url 'cliente_cadastrar' %}"><button class="btn btn-outline-light">Cadastrar</button></a>
+        </div>
     </div>
-    {% for data in dataset %}
-    <div class="row">
-        <div class="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a></div>
-        <div class="col">{{ data.nome }}</div> 
-        <div class="col">{{ data.contato }}</div>
-    </div>
-    {% endfor %}
+    <br>
+    <table class="table table-striped">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Contato</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">E-mail</th>
+            </tr>
+        </thead>
+        {% for data in dataset %}
+        <a href="{% url 'cliente_detail' data.id %}">
+        <thead>
+            <tr>
+                <th scope="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a></th>
+                <th scope="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.nome }}</a></th>
+                <th scope="col">{{ data.contato }}</th>
+                <th scope="col">{{ data.telefone }}</th>
+                <th scope="col">{{ data.email }}</th>
+            </tr>
+        </thead>
+        <a href="{% url 'cliente_detail' data.id %}">
+        {% endfor %}
 </div>
 {% endblock %}
