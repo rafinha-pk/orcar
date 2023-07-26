@@ -7,7 +7,7 @@
         <div class="col">Nome</div> 
         <div class="col">Contato</div>
     </div>
-    {% for data in dataset %}.
+    {% for data in dataset %}
     <div class="row">
         <div class="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a></div>
         <div class="col">{{ data.nome }}</div> 

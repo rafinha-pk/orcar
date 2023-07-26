@@ -17,7 +17,21 @@ class ClienteForm(forms.ModelForm):
 		#	"obs",
 		#]
 		fields = "__all__"
-	nome = forms.CharField(max_length=250)
+		widgets = {
+			'data_ultimo': forms.DateInput(
+				attrs={'type':'date'}
+				), 
+			'data_criacao': forms.DateInput(
+				attrs={'type': 'date'}
+				)
+		}
+	def __init__(self, *args, **kwargs):
+		super(ClienteForm, self).__init__(*args, **kwargs)
+		self.fields['criador'].disabled = True
+		self.fields['data_criacao'].disabled = True
+		#self.fields['data_ultimo'].disabled = True
+		#self.fields['data_ultimo'].
+	"""nome = forms.CharField(max_length=250)
 	telefone = forms.CharField(max_length=20, required=False)
 	telefone2 = forms.CharField(max_length=20, required=False)
 	contato = forms.CharField(max_length=250, required=False)
@@ -28,4 +42,4 @@ class ClienteForm(forms.ModelForm):
 
 	criador = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 	data_criacao = forms.IntegerField(widget=forms.HiddenInput(), required=False)
-	data_ultimo = forms.IntegerField(widget=forms.HiddenInput(), initial=date.today())
+	data_ultimo = forms.IntegerField(widget=forms.HiddenInput(), initial=date.today())"""

@@ -1,13 +1,14 @@
+from datetime import date
+
 from django.shortcuts import (render, get_object_or_404, HttpResponseRedirect)
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from .models import Clientes
 from .forms import ClienteForm
-import datetime #just 4 test
+
 
 def orcamento_index(request):
-	now = datetime.datetime.now()
-	html = "Time is {}".format(now)
+	html = "Time is"
 
 	return HttpResponse(html)
 
@@ -43,15 +44,16 @@ def cliente_cadastra(request):
 
 def cliente_atualiza(request, pk):
 	context = {}
-	obj = get_object_or_404(Clientes, id = pk)
-
+	obj = get_object_or_404(Clientes, id=pk)
 	form = ClienteForm(request.POST or None, instance = obj)
-
-	if form.is_valid():
-		criador = User.objects.get(pk=form.criador)
-		form.instance.criador = criador
-		form.save()
-		return HttpResponseRedirect("/cliente/" + str(pk))
+	if request.POST:
+		if form.is_valid():
+			#criador = models.User(pk=form.instance.criador)
+			#criador = get_object_or_404(User, id=str(obj.criador))
+			HOJE = date.today()
+			form.instance.data_ultimo = HOJE 
+			form.save()
+			return HttpResponseRedirect("/cliente/" + str(pk))
 	context["form"] = form
 
 	return render(request, "cliente_atualiza.html", context)
