@@ -27,8 +27,8 @@ class ClienteForm(forms.ModelForm):
 		}
 	def __init__(self, *args, **kwargs):
 		super(ClienteForm, self).__init__(*args, **kwargs)
-		self.fields['criador'].disabled = True
-		self.fields['data_criacao'].disabled = True
+		#self.fields['criador'].disabled = True
+		#self.fields['data_criacao'].disabled = True
 		#self.fields['data_ultimo'].disabled = True
 		#self.fields['data_ultimo'].
 	"""nome = forms.CharField(max_length=250)

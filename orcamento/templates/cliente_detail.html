@@ -20,18 +20,19 @@
         <thead>
             <th scope="col">Data do cadastro: </th>
             <th scope="col">{{ data.data_criacao }}</th>
-            <th scope="col">Ultima atividade: : </th>
+            <th scope="col">Ultima atividade: </th>
             <th scope="col">{{ data.data_ultimo }}</th>
         </thead>
         <thead>
             <th scope="col" colspan="4">Observações: </th>
         </thead>
         <thead>
-            <th scope="col" colspan="4">{{ data.obs }}</th>
+            <th scope="col" colspan="4"><pre>{{ data.obs }}</pre></th>
         </thead>
     </table>
     <br><br>
     <div class="container"><a href="{% url 'cliente_atualiza' data.id %}">[ Editar ]</a></div>
+    <br>
 </div>
 {% endblock %}
  

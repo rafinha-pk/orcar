@@ -1,8 +1,8 @@
 from datetime import date
-
 from django.shortcuts import (render, get_object_or_404, HttpResponseRedirect)
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.urls import reverse
 from .models import Clientes
 from .forms import ClienteForm
 
@@ -29,17 +29,15 @@ def cliente_detail(request, pk):
 
 def cliente_cadastra(request):
 	context = {}
-
-	form = ClienteForm(request.POST or None)
-
-	if form.is_valid():
-		usuario_logado = User.objects.get(pk=request.user.pk)
-		form.instance.criador = usuario_logado
-		data_atual = datetime.date.today()
-		form.instance.data_criacao = data_atual
-		form.instance.data_ultimo = data_atual
-		form.save()
-		return HttpResponseRedirect('/cliente')
+	HOJE = date.today()
+	
+	if request.POST:
+		form = ClienteForm(request.POST or None)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('/cliente')
+	else:
+		form = ClienteForm(initial={'criador':request.user, 'data_criacao':HOJE, 'data_ultimo': HOJE})
 
 	context["form"] = form
 
