@@ -28,17 +28,16 @@
             </tr>
         </thead>
         {% for data in dataset %}
-        <a href="{% url 'cliente_detail' data.id %}">
-        <thead>
+        
+        <thead><a href="{% url 'cliente_detail' data.id %}">
             <tr>
                 <th scope="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.pk }}</a></th>
                 <th scope="col"><a href="{% url 'cliente_detail' data.id %}">{{ data.nome }}</a></th>
                 <th scope="col">{{ data.contato }}</th>
                 <th scope="col">{{ data.telefone }}</th>
                 <th scope="col">{{ data.email }}</th>
-            </tr>
+            </tr></a>
         </thead>
-        <a href="{% url 'cliente_detail' data.id %}">
         {% endfor %}
 </div>
 {% endblock %}
