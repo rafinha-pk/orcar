@@ -26,8 +26,10 @@ urlpatterns = [
     path('cliente/<int:pk>/', views.cliente_detail, name="cliente_detail"),
     path('cliente/<int:pk>/atualiza', views.cliente_atualiza, name="cliente_atualiza"),
     path('cliente/<int:pk>/delete', views.cliente_delete, name="cliente_delete"),
-    # path('fornecedor/', views.fornecedor_index),
-    # path('fornecedor/<int:pk>/', views.fornecedor_detail),
-    # path('produto/', views.produto_index),
-    # path('produto/<int:pk>', views.produto_detail),
+
+    path('fornecedor/', views.fornecedor_index, name="fornecedor"),
+    path('fornecedor/cadastrar', views.fornecedor_cadastra, name="fornecedor_cadastrar"),
+    path('fornecedor/<int:pk>/', views.fornecedor_detail, name="fornecedor_detail"),
+    path('fornecedor/<int:pk>/atualiza', views.fornecedor_atualiza, name="fornecedor_atualiza"),
+    path('fornecedor/<int:pk>/delete', views.fornecedor_delete, name="fornecedor_delete"),
 ]

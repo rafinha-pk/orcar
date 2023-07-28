@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container-md">
+    <br>
+    <h1>{{ data.nome }}</h1><br>
+    <table class="table table-striped">
+        <thead>
+            <th scope="col"><b>Nome: </b></th>
+            <th scope="col">{{ data.nome }}</th>
+            <th scope="col">Contato: </th>
+            <th scope="col">{{ data.contato }}</th>
+        </thead>
+        <thead>
+            <th scope="col">E-mail: </th>
+            <th scope="col">{{ data.email }}</th>
+            <th scope="col">E-mail 2: </th>
+            <th scope="col">{{ data.email2 }}</th>
+        </thead>
+        <thead>
+            <th scope="col">Data do cadastro: </th>
+            <th scope="col">{{ data.data_criacao }}</th>
+            <th scope="col">Ultima atividade: </th>
+            <th scope="col">{{ data.data_ultimo }}</th>
+        </thead>
+        <thead>
+            <th scope="col" colspan="4">Observações: </th>
+        </thead>
+        <thead>
+            <th scope="col" colspan="4"><pre>{{ data.obs }}</pre></th>
+        </thead>
+    </table>
+    <br><br>
+    <div class="container">
+        <div>
+            <a href="{% url 'fornecedor_atualiza' data.id %}">[ Editar ]</a>
+        </div>
+        <div style="text-align: right; color: #dc3545;" >
+            <a href="{% url 'fornecedor_delete' data.id %}">[ Deletar ]</a>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}
+ 

@@ -7,19 +7,18 @@
         <div class="col col-2"></div>
         <div class="col col-8 text-center">
             <form class="d-flex" role="search" method="POST" 
-                action="{% url 'cliente' %}">
+                action="{% url 'fornecedor' %}">
                 {% csrf_token %}
                 <input type="search" class="form-control me-2 w-100" 
-                    name="busca" placeholder="Buscar Cliente" aria-label="Buscar">
+                    name="busca" placeholder="Buscar Fornecedor" aria-label="Buscar">
                 <button class="btn btn-outline-light" type="submit">
                     Buscar
                 </button>
             </form>
         </div>
         <div class="col col-2">
-            <a href="{% url 'cliente_cadastrar' %}">
-                <button class="btn btn-outline-light">Cadastrar</button>
-            </a>
+            <a href="{% url 'fornecedor_cadastrar' %}">
+                <button class="btn btn-outline-light">Cadastrar</button></a>
         </div>
     </div>
     <br>
@@ -35,17 +34,15 @@
         </thead>
         {% for data in dataset %}
         
-        <thead><a href="{% url 'cliente_detail' data.id %}">
+        <thead><a href="{% url 'fornecedor_detail' data.id %}">
             <tr>
                 <th scope="col">
-                    <a href="{% url 'cliente_detail' data.id %}">
-                        {{ data.pk }}
-                    </a>
+                    <a href="{% url 'fornecedor_detail' data.id %}">
+                    {{ data.pk }}</a>
                 </th>
                 <th scope="col">
-                    <a href="{% url 'cliente_detail' data.id %}">
-                        {{ data.nome }}
-                    </a>
+                    <a href="{% url 'fornecedor_detail' data.id %}">
+                    {{ data.nome }}</a>
                 </th>
                 <th scope="col">{{ data.contato }}</th>
                 <th scope="col">{{ data.telefone }}</th>
