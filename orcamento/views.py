@@ -3,6 +3,7 @@ from django.shortcuts import (render, get_object_or_404, HttpResponseRedirect)
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.db.models import Q
 from .models import Clientes
 from .forms import ClienteForm
 
@@ -15,7 +16,10 @@ def orcamento_index(request):
 def cliente_index(request):
     context = {}
     if request.POST:
-        context["dataset"] = Clientes.objects.all().filter(nome__icontains=request.POST.get('busca')).order_by('-pk')
+        context["dataset"] = Clientes.objects.all().filter(
+                            Q(nome__icontains= request.POST.get('busca')) |
+                            Q(contato__icontains= request.POST.get('busca'))
+                            ).order_by('-pk')
     else:
         context["dataset"] = Clientes.objects.all().order_by('-pk')
         

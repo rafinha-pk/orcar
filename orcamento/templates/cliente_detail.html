@@ -31,7 +31,14 @@
         </thead>
     </table>
     <br><br>
-    <div class="container"><a href="{% url 'cliente_atualiza' data.id %}">[ Editar ]</a></div>
+    <div class="container">
+        <div>
+            <a href="{% url 'cliente_atualiza' data.id %}">[ Editar ]</a>
+        </div>
+        <div style="text-align: right; color: #dc3545;" >
+            <a href="{% url 'cliente_delete' data.id %}">[ Deletar ]</a>
+        </div>
+    </div>
     <br>
 </div>
 {% endblock %}
