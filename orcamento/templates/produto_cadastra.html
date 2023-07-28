@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<br>
+<form method="POST">
+    <div class="container">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <table class="table table-dark table-striped">
+            <thead><tr>
+                <td class="col col-2">Nome: </td>
+                <td class="col col-4">{{ form.nome }}</td>
+                <td class="col col-2">Fornecedor: </td>
+                <td class="col col-4">{{ form.fornecedor }}</td>
+            </tr></thead>
+            <thead><tr>
+                <td class="col col-2">PN: </td>
+                <td class="col col-4">{{ form.pn }}</td>
+                <td class="col col-2">Unidade: </td>
+                <td class="col col-4">{{ form.unidade }}</td>
+            </tr></thead>
+            <thead><tr>
+                <td class="col col-2">Valor fornecedor: </td>
+                <td class="col col-4">{{ form.valor_fornecedor }}</td>
+                <td class="col col-2">Margem: </td>
+                <td class="col col-4">{{ form.margem }}</td>
+            </tr></thead>
+            <thead><tr>
+                <td class="col col-12" colspan="12">Obs: </td>
+            </tr></thead>
+            <thead><tr>
+                <td class="col col-12" colspan="12">{{ form.obs }}</td>
+            </tr></thead>
+            <thead><tr>
+                <div style="display: none;">
+                    {{ form.criador }}
+                    {{ form.data_criacao }}
+                    {{ form.data_ultimo }}
+                    {{ form.valor_final }}
+                </div>
+            </tr></thead>
+        </table>
+        <input type="submit" class="form-control" value="cadastrar">
+    </div>
+</form> 
+
+{% endblock %}

@@ -7,10 +7,10 @@
         <div class="col col-2"></div>
         <div class="col col-8 text-center">
             <form class="d-flex" role="search" method="POST" 
-                  action="{% url 'fornecedor' %}">
+                  action="{% url 'produto' %}">
                 {% csrf_token %}
                 <input type="search" class="form-control me-2 w-100" 
-                        name="busca" placeholder="Buscar Fornecedor" 
+                        name="busca" placeholder="Buscar Produto" 
                         aria-label="Buscar">
                 <button class="btn btn-outline-light" type="submit">
                     Buscar
@@ -18,7 +18,7 @@
             </form>
         </div>
         <div class="col col-2">
-            <a href="{% url 'fornecedor_cadastrar' %}">
+            <a href="{% url 'produto_cadastrar' %}">
                 <button class="btn btn-outline-light">Cadastrar</button></a>
         </div>
     </div>
@@ -28,26 +28,32 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome</th>
-                <th scope="col">Contato</th>
-                <th scope="col">Telefone</th>
-                <th scope="col">E-mail</th>
+                <th scope="col">PN</th>
+                <th scope="col">Unidade</th>
+                <th scope="col">Preço Final</th>
+                <th scope="col">Fornecedor</th>
+                <th scope="col">Preço Fornecedor</th>
+                <th scope="col">Margem</th>
             </tr>
         </thead>
         {% for data in dataset %}
         
-        <thead><a href="{% url 'fornecedor_detail' data.id %}">
+        <thead><a href="{% url 'produto_detail' data.id %}">
             <tr>
                 <th scope="col">
-                    <a href="{% url 'fornecedor_detail' data.id %}">
+                    <a href="{% url 'produto_detail' data.id %}">
                     {{ data.pk }}</a>
                 </th>
                 <th scope="col">
-                    <a href="{% url 'fornecedor_detail' data.id %}">
+                    <a href="{% url 'produto_detail' data.id %}">
                     {{ data.nome }}</a>
                 </th>
-                <th scope="col">{{ data.contato }}</th>
-                <th scope="col">{{ data.telefone }}</th>
-                <th scope="col">{{ data.email }}</th>
+                <th scope="col">{{ data.pn }}</th>
+                <th scope="col">{{ data.unidade }}</th>
+                <th scope="col">R$ {{ data.valor_final }}</th>
+                <th scope="col">{{ data.fornecedor }}</th>
+                <th scope="col">R$ {{ data.valor_fornecedor }}</th>
+                <th scope="col">{{ data.margem }}%</th>
             </tr></a>
         </thead>
         {% endfor %}

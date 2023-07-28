@@ -30,7 +30,7 @@ class Fornecedores(models.Model):
 	obs = models.TextField(blank=True)
 
 	def __str__(self):
-		return self
+		return self.nome
 
 class Produtos(models.Model):
 	nome = models.CharField(max_length=250)
