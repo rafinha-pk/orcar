@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
 </head>
 <body data-bs-theme="dark">
 	<nav class="navbar bg-dark border-bottom border-body navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
@@ -44,4 +45,5 @@
 	{% block content %}
 	{% endblock %}
 </body>
+<script src="{% static 'js/base.js' %}"></script>
 </html>

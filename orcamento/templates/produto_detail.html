@@ -19,7 +19,7 @@
         </thead>
         <thead>
             <th scope="col">Margem: </th>
-            <th scope="col">{{ data.margem }}%</th>
+            <th scope="col">{{ data.margem }} %</th>
             <th scope="col">Fornecedor: </th>
             <th scope="col">{{ data.fornecedor }}</th>
         </thead>
@@ -39,10 +39,10 @@
     <br><br>
     <div class="container">
         <div>
-            <a href="{% url 'fornecedor_atualiza' data.id %}">[ Editar ]</a>
+            <a href="{% url 'produto_atualiza' data.id %}">[ Editar ]</a>
         </div>
         <div style="text-align: right; color: #dc3545;" >
-            <a href="{% url 'fornecedor_delete' data.id %}">[ Deletar ]</a>
+            <a href="{% url 'produto_delete' data.id %}">[ Deletar ]</a>
         </div>
     </div>
     <br>

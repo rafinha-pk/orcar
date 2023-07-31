@@ -1,4 +1,5 @@
 from datetime import date
+import re
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
@@ -181,7 +182,12 @@ def produto_cadastra(request):
     if request.POST:
         form = ProdutoForm(request.POST or None)
         if form.is_valid():
-            valor_final = (form.instance.valor_fornecedor * 100) / (100 - form.instance.margem)
+            valor_final = (form.instance.valor_fornecedor * (
+                          100/ form.instance.margem
+                          )) / ((
+                          100 / form.instance.margem)-1)
+            
+            form.instance.valor_final = valor_final
 
             form.save()
             return HttpResponseRedirect('/produto')
@@ -200,6 +206,9 @@ def produto_atualiza(request, pk):
     obj = get_object_or_404(Produtos, id=pk)
     form = ProdutoForm(request.POST or None, instance = obj)
     if request.POST:
+        #form.instance.margem = "20,00"#round(form.instance.margem, 2)
+        #form.instance.valor_fornecedor = "96,00"#round(form.instance.valor_fornecedor, 2)
+        #form.instance.valor_final = "120,00"#round(form.instance.valor_final, 2)
         if form.is_valid():
             HOJE = date.today()
             form.instance.data_ultimo = HOJE 

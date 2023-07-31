@@ -3,7 +3,7 @@
 {% block content %}
 <br>
 <form method="POST">
-    <div class="container">
+    <div class="container atualiza_valor">
         <!-- Security token by Django -->
         {% csrf_token %}
         <table class="table table-dark table-striped">
@@ -23,7 +23,11 @@
                 <td class="col col-2">Valor fornecedor: </td>
                 <td class="col col-4">{{ form.valor_fornecedor }}</td>
                 <td class="col col-2">Margem: </td>
-                <td class="col col-4">{{ form.valor_final }}</td>
+                <td class="col col-4">{{ form.margem }}</td>
+            </tr></thead>
+            <thead><tr>
+                <td class="col col-2">Valor final: </td>
+                <td class="col col-10" colspan="10">{{ form.valor_final }}</td>
             </tr></thead>
             <thead><tr>
                 <td class="col col-12" colspan="12">Obs: </td>
@@ -36,7 +40,6 @@
                     {{ form.criador }}
                     {{ form.data_criacao }}
                     {{ form.data_ultimo }}
-                    {{ form.valor_final }}
                 </div>
             </tr></thead>
         </table>

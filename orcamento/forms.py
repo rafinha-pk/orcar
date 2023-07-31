@@ -53,10 +53,21 @@ class ProdutoForm(forms.ModelForm):
                 ), 
             'data_criacao': forms.DateInput(
                 attrs={'type': 'date'}
-                )
+                ),
+            'valor_fornecedor': forms.DateInput(
+                attrs={'placeholder': 'R$ '}
+                ),
+            'valor_final': forms.DateInput(
+                attrs={'placeholder': 'R$ '}
+                ),
+            'margem': forms.DateInput(
+                attrs={'placeholder': '% '}
+                ),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for field in self.fields.values():
             field.widget.attrs['class']=  'form-control'
+        self.fields['valor_fornecedor'].widget.attrs['class'] += ' money'
+        self.fields['valor_final'].widget.attrs['class'] += ' money'

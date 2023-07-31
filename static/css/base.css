@@ -19,3 +19,8 @@ tr:hover th, tr:hover th a
 	 background-color: var(--bs-secondary-bg);
 	 /*color: var(--bs-dark);*/
 }
+.money
+{
+	text-align: right;
+}
+

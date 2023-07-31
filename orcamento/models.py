@@ -56,8 +56,8 @@ class Produtos(models.Model):
 	data_ultimo = models.DateField('Ultima atividade')
 	obs = models.TextField(blank=True)
 
-	def __str__(self):
-		return self
+	#def __str__(self):
+		#return self
 
 class StatusOrcamento(models.Model):
 	nome = models.CharField(max_length=100)
