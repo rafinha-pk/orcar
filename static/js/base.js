@@ -1,66 +1,91 @@
 $(document).ready(function(){
-	/* - mascaras - */
-	/*$('.money').mask("##0,00", {reverse: true});
-	$('#id_margem').mask('##0,00', {reverse: true});*/
+	/* mascaras **/
+	$('.money').mask("###.###.##0,00", {reverse: true});
+	$('.margem').mask("##,00", {reverse: false});
 
-	/* - funções - */
-	function LimpaMascara(valor)
+	/* funções */
+
+	function poemVirgula(x)
 	{
-		/*limpo = valor.replace('.', '');*/
-		var limpo = String(valor).replace(',', '.');
-		limpo = parseInt(limpo);
-		/*limpo = limpo.toFixed(2);*/
-		return limpo;
+		y = String(x).replace('.', ',');
+		return y;
 	}
-	function CriaMascara(valor)
+
+
+	function atualizaValorFinal()
 	{
-		var limpo = String(valor).replace('.', ',');
-		limpo = parseInt(limpo)
-		return limpo;
-	}
-	function AtualizaFinal(valor_fornecedor, margem)
-	{
-		margem = LimpaMascara(margem);
-		valor_fornecedor = LimpaMascara(valor_fornecedor);
+		var valor_fornecedor = ($('#id_valor_fornecedor').cleanVal())/100;
+		valor_fornecedor = Number(valor_fornecedor).toFixed(2);
+
+		var valor_final = ($('#id_valor_final').cleanVal())/100;
+		valor_final = Number(valor_final).toFixed(2);
+		var margem = ($('#id_margem').cleanVal())/100;
+		margem = Number(margem).toFixed(2);
 		valor_final = (valor_fornecedor * (
                           100/ margem
                           )) / ((
                           100 / margem)-1);
-        valor_final = CriaMascara(valor_final).toFixed(2);
-        margem = CriaMascara(margem).toFixed(2);
-        valor_fornecedor = CriaMascara(valor_fornecedor).toFixed(2);
-        $('#id_valor_fornecedor').val(valor_fornecedor);
-        $('#id_margem').val(margem);
-        $('#id_valor_final').val(valor_final);
+        valor_final = valor_final.toFixed(2);
+        $('#id_valor_final').val(poemVirgula(valor_final));
+        $('.money').mask("###.###.##0,00", {reverse: true});
+		$('.margem').mask("##,00", {reverse: false});
 	}
 
-	function AtualizaMargem(valor_fornecedor, valor_final)
+
+	function atualizaMargem()
 	{
-		valor_fornecedor = LimpaMascara(valor_fornecedor);
-		valor_final = LimpaMascara(valor_final);
+		var valor_fornecedor = ($('#id_valor_fornecedor').cleanVal())/100;
+		valor_fornecedor = Number(valor_fornecedor).toFixed(2);
+
+		var valor_final = ($('#id_valor_final').cleanVal())/100;
+		valor_final = Number(valor_final).toFixed(2);
+		var margem = ($('#id_margem').cleanVal())/100;
+		margem = Number(margem).toFixed(2);
 		margem_final = 100 - ((valor_fornecedor ) / (
                           valor_final / 100));
-		valor_final = CriaMascara(valor_final.toFixed(2));
-        margem = CriaMascara(margem_final.toFixed(2));
-        valor_fornecedor = CriaMascara(valor_fornecedor.toFixed(2));
-        $('#id_valor_fornecedor').val(valor_fornecedor);
-        $('#id_margem').val(margem);
-        $('#id_valor_final').val(valor_final);
+        margem_final = margem_final.toFixed(2);
+        $('#id_margem').val(poemVirgula(margem_final));
+        $('.money').mask("###.###.##0,00", {reverse: true});
+		$('#id_margem').mask("##,00", {reverse: false});
 	}
-	/* - ações - */ 
-	$('.atualiza_valor #id_valor_fornecedor').change( function(){
-											 AtualizaFinal(
-											 			$('#id_valor_fornecedor').val(),
-											 			$('#id_margem').val() );
-		});
-	$('.atualiza_valor #id_margem').change( function(){
-											 AtualizaFinal(
-											 			$('#id_valor_fornecedor').val(),
-											 			$('#id_margem').val() );
-		});
-	$('.atualiza_valor #id_valor_final').change( function(){
-										AtualizaMargem(
-													$('#id_valor_fornecedor').val(),
-											 		$('#id_valor_final').val() );
-		});
+
+
+	/* ações */
+
+	$('.atualiza_valor #id_valor_fornecedor').blur(function(){
+		atualizaValorFinal();
+	});
+
+
+	$('.atualiza_valor #id_margem').blur(function(){
+		atualizaValorFinal();
+	});
+
+
+	$('.atualiza_valor #id_valor_final').blur(function(){
+		atualizaMargem();
+	});
+
+	$('#form-produto').on('keydown', function(event) {
+    	if (event.key === 'Enter') {
+        	event.preventDefault();
+      	}
+    });
+	$('#form-produto').on('submit', function(event)
+	{
+		atualizaMargem();
+
+		$('.money').unmask();
+		$('.margem').unmask();
+		valor_fornecedor = ($('#id_valor_fornecedor').val())/100;
+		$('#id_valor_fornecedor').val(valor_fornecedor);
+		valor_final = ($('#id_valor_final').val())/100;
+		$('#id_valor_final').val(valor_final);
+		if ($('#id_margem').val().length <= 2)
+		{
+			margem = $('#id_margem').val().toFixed(2);
+		}
+		margem = ($('#id_margem').val())/100;
+		$('#id_margem').val(margem);
+	});
 });

@@ -71,3 +71,4 @@ class ProdutoForm(forms.ModelForm):
             field.widget.attrs['class']=  'form-control'
         self.fields['valor_fornecedor'].widget.attrs['class'] += ' money'
         self.fields['valor_final'].widget.attrs['class'] += ' money'
+        self.fields['margem'].widget.attrs['class'] += ' margem'
