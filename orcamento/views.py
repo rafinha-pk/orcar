@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as dj_login
+from django.contrib.auth import logout as dj_logout
 from django.urls import reverse
 from django.db.models import Q
 from .models import Clientes
@@ -13,6 +16,33 @@ from .models import Fornecedores
 from .forms import FornecedorForm
 from .models import Produtos
 from .forms import ProdutoForm
+
+# LOGIN
+
+def login(request):
+    html = "Time is"
+    if request.POST:
+        usuario = request.POST["usuario"]
+        senha = request.POST["senha"]
+        user = authenticate(request, username=usuario, password=senha)
+        html = "Usuario: " + usuario + " - senha: " + senha
+        if user is not None:
+            if user.is_active:
+                dj_login(request, user)
+                return HttpResponseRedirect('/cliente')
+            else:
+                html= "usuario bloqueado!"
+                return HttpResponse(html)
+        else:
+            return HttpResponse(html)
+            #return HttpResponseRedirect('/fornecedor')
+    else:
+        return HttpResponse(html)
+
+def logout(request):
+
+    dj_logout(request)
+    return HttpResponseRedirect('/cliente')
 
 # ORÇAMENTOS
 
@@ -29,9 +59,9 @@ def cliente_index(request):
         context["dataset"] = Clientes.objects.all().filter(
                             Q(nome__icontains= request.POST.get('busca')) |
                             Q(contato__icontains= request.POST.get('busca'))
-                            ).order_by('-pk')
+                            ).order_by('-pk')[:30]
     else:
-        context["dataset"] = Clientes.objects.all().order_by('-pk')
+        context["dataset"] = Clientes.objects.all().order_by('-pk')[:20]
         
     return render(request, "cliente_index.html", context)
 
@@ -96,9 +126,9 @@ def fornecedor_index(request):
         context["dataset"] = Fornecedores.objects.all().filter(
                             Q(nome__icontains= request.POST.get('busca')) |
                             Q(contato__icontains= request.POST.get('busca'))
-                            ).order_by('-pk')
+                            ).order_by('-pk')[:30]
     else:
-        context["dataset"] = Fornecedores.objects.all().order_by('-pk')
+        context["dataset"] = Fornecedores.objects.all().order_by('-pk')[:20]
         
     return render(request, "fornecedor_index.html", context)
 
@@ -163,9 +193,9 @@ def produto_index(request):
         context["dataset"] = Produtos.objects.all().filter(
                             Q(nome__icontains= request.POST.get('busca')) |
                             Q(pn__icontains= request.POST.get('busca'))
-                            ).order_by('-pk')
+                            ).order_by('-pk')[:30]
     else:
-        context["dataset"] = Produtos.objects.all().order_by('-pk')
+        context["dataset"] = Produtos.objects.all().order_by('-pk')[:20]
         
     return render(request, "produto_index.html", context)
 

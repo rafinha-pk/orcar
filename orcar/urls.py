@@ -6,6 +6,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.orcamento_index),
     # path('orcamento/<int:pk>/', views.orcamento_detail),
+
+    path('login/', views.login, name="login"),
+    path('logout/', views.logout, name="logout"),
+
     path('cliente/', views.cliente_index, name="cliente"),
     path('cliente/cadastrar', views.cliente_cadastra, name="cliente_cadastrar"),
     path('cliente/<int:pk>/', views.cliente_detail, name="cliente_detail"),
