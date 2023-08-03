@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container text-center">
+    <br>
+    <form class="d-flex" role="search" method="POST" 
+                  action="{% url 'home' %}">
+    <div class="row" style="width: 100%;">
+        <div class="col col-2 text-center">
+            {% csrf_token %}
+            <input type="date" name="data_inicio" class="form-control" value="{{ data_minima|date:'Y-m-d' }}">
+        </div>
+        <div class="col col-2 text-center">
+            <input type="date" name="data_final" class="form-control" value="{{ data_maxima|date:'Y-m-d' }}">
+        </div>
+        <div class="col col-3 text-center">
+            <select name="status" class="form-control">
+                <option value="" selected>Todos</option>
+                {% for l_status in lista_status %}
+                <option value="{{ l_status.pk }}">{{ l_status.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col col-2 text-center">
+            <button class="btn btn-outline-light" type="submit">
+                Filtrar
+            </button>
+            
+        </div>
+        <div class="col col-3">
+            <a href="{% url 'produto_cadastrar' %}">
+                <button class="btn btn-outline-light">Cadastrar</button></a>
+        </div>
+    </div>
+    </form>
+    <br>
+    <table class="table table-striped">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Cliente</th>
+                <th scope="col" class="d-none d-sm-table-cell">Vencimento</th>
+                <th scope="col" class="d-none d-sm-table-cell">Atividade</th>
+                <th scope="col" class="d-none d-sm-table-cell">Quantidade</th>
+                <th scope="col">Preço Final</th>
+                <th scope="col" class="d-none d-sm-table-cell">Custo</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        {% for data in dataset %}
+        <thead>
+        {% if data.status == status_aberto  %}
+            <tr>
+        {% elif data.status == status_enviado  %}
+            <tr class="enviado">
+        {% elif data.status == status_atrasado  %}
+            <tr class="atrasado">
+        {% elif data.status == status_vendido  %}
+            <tr class="vendido">
+        {% elif data.status == status_cancelado  %}
+            <tr class="cancelado">
+        {% else %}
+            <tr>
+        {% endif %}
+        <a href="{% url 'produto_detail' data.id %}">
+                <th scope="col">
+                    <a href="{% url 'produto_detail' data.id %}">
+                    {{ data.pk }}</a>
+                </th>
+                <th scope="col">
+                    <a href="{% url 'produto_detail' data.id %}">
+                    {{ data.cliente }}</a>
+                </th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.data_vencimento }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.data_ultimo}}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.quantidade}}</th>
+                <th scope="col">R$ {{ data.valor_final }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">R$ {{ data.valor_fornecedor }}</th>
+                <th scope="col">{{ data.status }}</th>
+            </tr>
+        </thead>
+        {% endfor %}
+        <div style="display: none;">{% for ven in vencidos %} {{ven.cliente}} {% endfor %}</div>
+</div>
+{% endblock %}

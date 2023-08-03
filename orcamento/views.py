@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import timedelta
 import re
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,9 @@ from .models import Fornecedores
 from .forms import FornecedorForm
 from .models import Produtos
 from .forms import ProdutoForm
+from .models import Orcamentos
+
+from .models import StatusOrcamento
 
 # LOGIN
 
@@ -47,9 +51,47 @@ def logout(request):
 # ORÇAMENTOS
 
 def orcamento_index(request):
-    html = "Time is"
+    context = {}
+    HOJE = date.today()
+    DATA_MAXIMA = HOJE + timedelta(days=30)
+    DATA_MINIMA = HOJE - timedelta(days=30)
+    lista_status = StatusOrcamento.objects.all()
+    context["lista_status"] = lista_status
+    context["data_hoje"] = HOJE
+    context["data_maxima"] = DATA_MAXIMA
+    context["data_minima"] = DATA_MINIMA
+    context["status_aberto"] = StatusOrcamento.objects.get(id = 1)
+    context["status_enviado"] = StatusOrcamento.objects.get(id = 2)
+    context["status_atrasado"] = StatusOrcamento.objects.get(id = 3)
+    context["status_vendido"] = StatusOrcamento.objects.get(id = 4)
+    context["status_cancelado"] = StatusOrcamento.objects.get(id = 5)
 
-    return HttpResponse(html)
+    if request.POST:
+        
+        context["dataset"] = Orcamentos.objects.all().filter(
+                            data_ultimo__gte = DATA_MINIMA, 
+                            data_ultimo__lte = DATA_MAXIMA
+                            ).order_by('status', '-data_ultimo')
+    else:
+        # fazer uma verificação da data_ultimo < data_vencimento
+        vencidos = Orcamentos.objects.filter(
+                            Q(data_vencimento__lt = HOJE
+                                )).exclude(
+                                    status = StatusOrcamento.objects.get(id = 3)
+                                    ).exclude(
+                                    status = StatusOrcamento.objects.get(id = 4)
+                                    ).exclude(
+                                    status = StatusOrcamento.objects.get(id = 5)
+                                    )
+        for vencido in vencidos:
+            vencido.status = StatusOrcamento.objects.get(id = 3)
+            vencido.save()
+        context["dataset"] = Orcamentos.objects.all().filter(
+                            data_ultimo__gte = DATA_MINIMA, 
+                            data_ultimo__lte = DATA_MAXIMA
+                            ).order_by('status', '-data_ultimo')
+        
+    return render(request, "orcamento_index.html", context)
 
 # CLIENTES
 

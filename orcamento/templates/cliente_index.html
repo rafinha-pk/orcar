@@ -28,9 +28,9 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome</th>
-                <th scope="col">Contato</th>
+                <th scope="col" class="d-none d-sm-table-cell">Contato</th>
                 <th scope="col">Telefone</th>
-                <th scope="col">E-mail</th>
+                <th scope="col" class="d-none d-sm-table-cell">E-mail</th>
             </tr>
         </thead>
         {% for data in dataset %}
@@ -47,9 +47,9 @@
                         {{ data.nome }}
                     </a>
                 </th>
-                <th scope="col">{{ data.contato }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.contato }}</th>
                 <th scope="col">{{ data.telefone }}</th>
-                <th scope="col">{{ data.email }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.email }}</th>
             </tr></a>
         </thead>
         {% endfor %}

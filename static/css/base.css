@@ -23,4 +23,43 @@ tr:hover th, tr:hover th a
 {
 	text-align: right;
 }
-
+.enviado
+{
+	/*--bs-table-bg: #198754;*/
+	--bs-table-bg: #031633;
+	--bs-table-color: #bcd0c7;
+}
+.enviado:hover
+{
+	--bs-table-color: #bcd0c7;
+}
+.atrasado
+{
+	/*--bs-table-bg: #198754;*/
+	--bs-table-bg: #332701;
+	--bs-table-color: #bcd0c7;
+}
+.atrasado:hover
+{
+	--bs-table-color: #bcd0c7;
+}
+.vendido
+{
+	/*--bs-table-bg: #198754;*/
+	--bs-table-bg: #051b11;
+	--bs-table-color: #bcd0c7;
+}
+.vendido:hover
+{
+	--bs-table-color: #bcd0c7;
+}
+.cancelado
+{
+	/*--bs-table-bg: #198754;*/
+	--bs-table-bg: #2c0b0e;
+	--bs-table-color: #bcd0c7;
+}
+.cancelado:hover
+{
+	--bs-table-color: #bcd0c7;
+}

@@ -28,12 +28,12 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome</th>
-                <th scope="col">PN</th>
-                <th scope="col">Unidade</th>
+                <th scope="col" class="d-none d-sm-table-cell">PN</th>
+                <th scope="col" class="d-none d-sm-table-cell">Unidade</th>
                 <th scope="col">Preço Final</th>
-                <th scope="col">Fornecedor</th>
-                <th scope="col">Preço Fornecedor</th>
-                <th scope="col">Margem</th>
+                <th scope="col" class="d-none d-sm-table-cell">Fornecedor</th>
+                <th scope="col" class="d-none d-sm-table-cell">Preço Fornecedor</th>
+                <th scope="col" class="d-none d-sm-table-cell">Margem</th>
             </tr>
         </thead>
         {% for data in dataset %}
@@ -48,12 +48,12 @@
                     <a href="{% url 'produto_detail' data.id %}">
                     {{ data.nome }}</a>
                 </th>
-                <th scope="col">{{ data.pn }}</th>
-                <th scope="col">{{ data.unidade }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.pn }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.unidade }}</th>
                 <th scope="col">R$ {{ data.valor_final }}</th>
-                <th scope="col">{{ data.fornecedor }}</th>
-                <th scope="col">R$ {{ data.valor_fornecedor }}</th>
-                <th scope="col">{{ data.margem }}%</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.fornecedor }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">R$ {{ data.valor_fornecedor }}</th>
+                <th scope="col" class="d-none d-sm-table-cell">{{ data.margem }}%</th>
             </tr></a>
         </thead>
         {% endfor %}

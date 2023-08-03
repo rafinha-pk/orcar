@@ -14,8 +14,8 @@ class Clientes(models.Model):
 	data_ultimo = models.DateField('Ultima atividade')
 	obs = models.TextField(blank=True)
 
-	#def __str__(self):
-		#return self
+	def __str__(self):
+		return self.nome
 
 class Fornecedores(models.Model):
 	nome = models.CharField(max_length=250)
@@ -68,8 +68,8 @@ class StatusOrcamento(models.Model):
 class FormaPagamento(models.Model):
 	nome = models.CharField(max_length=100)
 
-	def __str__(self):
-		return self
+	#def __str__(self):
+		#return self
 
 class Orcamentos(models.Model):
 
@@ -86,8 +86,8 @@ class Orcamentos(models.Model):
 	pagamento = models.ForeignKey(FormaPagamento, blank=True, on_delete=models.SET(''))
 	parcelas = models.IntegerField(blank=True, default=1)
 	obs = models.TextField(blank=True)
-	def __str__(self):
-		return self
+	#def __str__(self):
+		#return self
 
 class RegOrcamentos(models.Model):
 	orcamento = models.ForeignKey(Orcamentos, on_delete=models.CASCADE)
@@ -99,5 +99,5 @@ class RegOrcamentos(models.Model):
 	margem = models.DecimalField(max_digits = 5, decimal_places = 2, blank=True)
 	data = models.DateTimeField("Data")
 
-	def __str__(self):
-		return self
+	#def __str__(self):
+		#return self
