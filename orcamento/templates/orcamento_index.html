@@ -3,23 +3,54 @@
 {% block content %}
 <div class="container text-center">
     <br>
-    <form class="d-flex" role="search" method="POST" 
-                  action="{% url 'home' %}">
+    <form id="forminho" class="d-flex" role="search" method="POST" 
+                  action="{% url 'home' %}">{% csrf_token %}
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col" class="col-1">De:</th>
+                <th scope="col" class="col-2">
+                    <input type="date" id="data_inicio" name="data_inicio" class="form-control filtro-orcamento" value="{{ data_minima|date:'Y-m-d' }}">
+                </th>
+                <th scope="col" class="col-1">Até:</th>
+                <th scope="col" class="col-2">
+                    <input type="date" id="data_final" name="data_final" class="form-control filtro-orcamento" value="{{ data_maxima|date:'Y-m-d' }}">
+                </th>
+                <th scope="col" class="col-1">Status:</th>
+                <th scope="col" class="col-3">
+                    <select id="status" name="status" class="form-control filtro-orcamento">
+                        <option value="">Todos</option>
+                        {% for l_status in lista_status %}
+                        <option value="{{ l_status.pk }}"
+                            {% if status == l_status %} SELECTED{% endif %}>{{ l_status.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th scope="col" class="col-2">
+                    <select id="meus" name="meus" class="form-control filtro-orcamento">
+                        <option value="1" {% if meus == "1" %} SELECTED{% endif %}>Somente meus</option>
+                        <option value="0"{% if meus != "1" %} SELECTED{% endif %}>Todos</option>
+                    </select>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+                  <!----------------------------- 
     <div class="row" style="width: 100%;">
         <div class="col col-2 text-center">
-            {% csrf_token %}
-            <input type="date" name="data_inicio" class="form-control" value="{{ data_minima|date:'Y-m-d' }}">
+            
+            <label for="data_inicio">De:</label>
+            <input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ data_minima|date:'Y-m-d' }}">
         </div>
         <div class="col col-2 text-center">
-            <input type="date" name="data_final" class="form-control" value="{{ data_maxima|date:'Y-m-d' }}">
+            <label for="data_final">Para:</label>
+            <input type="date" id="data_final" name="data_final" class="form-control" value="{{ data_maxima|date:'Y-m-d' }}">
         </div>
         <div class="col col-3 text-center">
-            <select name="status" class="form-control">
-                <option value="" selected>Todos</option>
-                {% for l_status in lista_status %}
-                <option value="{{ l_status.pk }}">{{ l_status.nome }}</option>
-                {% endfor %}
-            </select>
+            <label for="status">Status:</label>
+            
         </div>
         <div class="col col-2 text-center">
             <button class="btn btn-outline-light" type="submit">
@@ -31,7 +62,7 @@
             <a href="{% url 'produto_cadastrar' %}">
                 <button class="btn btn-outline-light">Cadastrar</button></a>
         </div>
-    </div>
+    </div>-->
     </form>
     <br>
     <table class="table table-striped">

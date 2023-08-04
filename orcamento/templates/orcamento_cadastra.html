@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container">
+    {% csrf_token %}
+    <br>
+    <div class="row">
+        <div class="col col-12"><h1>Criando orçamento para <b>{{ cliente.nome }}</b></h1></div>
+    </div>
+</div>
+<table class="table table-dark table-striped">
+    <thead><tr>
+        <td class="col col-2">Nome: </td>
+        <td class="col col-4">{{ form.nome }}</td>
+        <td class="col col-2">Telefone: </td>
+        <td class="col col-4">{{ form.telefone }}</td>
+    </tr></thead>
+    <thead><tr>
+        <td class="col col-2">Telefone 2: </td>
+        <td class="col col-4">{{ form.telefone2 }}</td>
+        <td class="col col-2">Contato: </td>
+        <td class="col col-4">{{ form.contato }}</td>
+    </tr></thead>
+    <thead><tr>
+        <td class="col col-2">E-mail: </td>
+        <td class="col col-4">{{ form.email }}</td>
+        <td class="col col-2">E-mail 2: </td>
+        <td class="col col-4">{{ form.email2 }}</td>
+    </tr></thead>
+    <thead><tr>
+        <td class="col col-12" colspan="12">Obs: </td>
+    </tr></thead>
+    <thead><tr>
+        <td class="col col-12" colspan="12">{{ form.obs }}</td>
+    </tr></thead>
+    <thead><tr>
+        <div style="display: none;">
+            {{ form.criador }}
+            {{ form.data_criacao }}
+            {{ form.data_ultimo }}
+        </div>
+    </tr></thead>
+</table>
+{% endblock %}

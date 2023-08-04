@@ -88,4 +88,8 @@ $(document).ready(function(){
 		margem = ($('#id_margem').val())/100;
 		$('#id_margem').val(margem);
 	});
+	$('.filtro-orcamento').change(function()
+	{
+		$('#forminho').submit();
+	});
 });

@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 from datetime import timedelta
 import re
 from django.shortcuts import render
@@ -18,6 +19,7 @@ from .forms import FornecedorForm
 from .models import Produtos
 from .forms import ProdutoForm
 from .models import Orcamentos
+from .forms import Orcamentos
 
 from .models import StatusOrcamento
 
@@ -58,8 +60,6 @@ def orcamento_index(request):
     lista_status = StatusOrcamento.objects.all()
     context["lista_status"] = lista_status
     context["data_hoje"] = HOJE
-    context["data_maxima"] = DATA_MAXIMA
-    context["data_minima"] = DATA_MINIMA
     context["status_aberto"] = StatusOrcamento.objects.get(id = 1)
     context["status_enviado"] = StatusOrcamento.objects.get(id = 2)
     context["status_atrasado"] = StatusOrcamento.objects.get(id = 3)
@@ -67,16 +67,48 @@ def orcamento_index(request):
     context["status_cancelado"] = StatusOrcamento.objects.get(id = 5)
 
     if request.POST:
-        
-        context["dataset"] = Orcamentos.objects.all().filter(
-                            data_ultimo__gte = DATA_MINIMA, 
-                            data_ultimo__lte = DATA_MAXIMA
-                            ).order_by('status', '-data_ultimo')
+        filtro_data_inicio = request.POST.get('data_inicio')
+        filtro_data_final = request.POST.get('data_final')
+        filtro_status = request.POST.get('status')
+        filtro_meus = request.POST.get('meus')
+        context["data_maxima"] = datetime.strptime(filtro_data_final, '%Y-%m-%d')
+        context["data_minima"] = datetime.strptime(filtro_data_inicio, '%Y-%m-%d')
+        if(filtro_status >= "0"):
+            context["status"] = StatusOrcamento.objects.get(id = filtro_status)
+        context["meus"] = filtro_meus
+        if(filtro_meus == "1"):
+            dataset = Orcamentos.objects.filter(
+                            Q(data_ultimo__lte = filtro_data_final),
+                            Q(data_ultimo__gte = filtro_data_inicio),
+                            Q(criador = request.user),
+                            )
+        else:
+            dataset = Orcamentos.objects.filter(
+                            Q(data_ultimo__lte = filtro_data_final),
+                            Q(data_ultimo__gte = filtro_data_inicio),
+                            )
+
+        if(filtro_status == "1"):
+            dataset = dataset.filter(Q(status = StatusOrcamento.objects.get(id = 1)))
+
+        elif(filtro_status == "2"):
+            dataset = dataset.filter(Q(status = StatusOrcamento.objects.get(id = 2)))
+
+        elif(filtro_status == "3"):
+            dataset = dataset.filter(Q(status = StatusOrcamento.objects.get(id = 3)))
+
+        elif(filtro_status == "4"):
+            dataset = dataset.filter(Q(status = StatusOrcamento.objects.get(id = 4)))
+
+        elif(filtro_status == "5"):
+            dataset = dataset.filter(Q(status = StatusOrcamento.objects.get(id = 5)))
+
+        context["dataset"] = dataset.order_by('status', '-data_ultimo')
     else:
         # fazer uma verificação da data_ultimo < data_vencimento
         vencidos = Orcamentos.objects.filter(
                             Q(data_vencimento__lt = HOJE
-                                )).exclude(
+                                ), Q(criador = request.user)).exclude(
                                     status = StatusOrcamento.objects.get(id = 3)
                                     ).exclude(
                                     status = StatusOrcamento.objects.get(id = 4)
@@ -86,13 +118,36 @@ def orcamento_index(request):
         for vencido in vencidos:
             vencido.status = StatusOrcamento.objects.get(id = 3)
             vencido.save()
+
+        context["data_maxima"] = DATA_MAXIMA
+        context["data_minima"] = DATA_MINIMA
+        context["meus"] = "1"
         context["dataset"] = Orcamentos.objects.all().filter(
-                            data_ultimo__gte = DATA_MINIMA, 
-                            data_ultimo__lte = DATA_MAXIMA
+                            Q(data_ultimo__gte = DATA_MINIMA), 
+                            Q(data_ultimo__lte = DATA_MAXIMA),
+                            Q(criador = request.user)
                             ).order_by('status', '-data_ultimo')
         
     return render(request, "orcamento_index.html", context)
 
+def orcamento_cadastra(request, pk):
+    context = {}
+    context["cliente"] = Clientes.objects.get(id= pk)
+
+    HOJE = date.today()
+    VENCIMENTO = HOJE + timedelta(days=3)
+    if request.POST:
+        # se post
+        x=1
+    else:
+        # se sim
+        form = OrcamentoForm(initial={'criador':request.user,
+                                       'data_criacao': HOJE,
+                                       'data_ultimo':HOJE,
+                                       'data_vencimento':VENCIMENTO,
+                                       'status':StatusOrcamento.objects.get(id = 1)})
+        #context["form"] = form
+    return render(request, "orcamento_cadastra.html", context)
 # CLIENTES
 
 def cliente_index(request):

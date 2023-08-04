@@ -5,6 +5,7 @@ from orcamento import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.orcamento_index, name="home"),
+    path('orcamento/cadastrar/<int:pk>/', views.orcamento_cadastra, name="orcamento_cadastra"),
     # path('orcamento/<int:pk>/', views.orcamento_detail),
 
     path('login/', views.login, name="login"),
