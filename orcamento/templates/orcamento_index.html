@@ -36,33 +36,6 @@
             </tr>
         </thead>
     </table>
-
-                  <!----------------------------- 
-    <div class="row" style="width: 100%;">
-        <div class="col col-2 text-center">
-            
-            <label for="data_inicio">De:</label>
-            <input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ data_minima|date:'Y-m-d' }}">
-        </div>
-        <div class="col col-2 text-center">
-            <label for="data_final">Para:</label>
-            <input type="date" id="data_final" name="data_final" class="form-control" value="{{ data_maxima|date:'Y-m-d' }}">
-        </div>
-        <div class="col col-3 text-center">
-            <label for="status">Status:</label>
-            
-        </div>
-        <div class="col col-2 text-center">
-            <button class="btn btn-outline-light" type="submit">
-                Filtrar
-            </button>
-            
-        </div>
-        <div class="col col-3">
-            <a href="{% url 'produto_cadastrar' %}">
-                <button class="btn btn-outline-light">Cadastrar</button></a>
-        </div>
-    </div>-->
     </form>
     <br>
     <table class="table table-striped">
@@ -93,13 +66,13 @@
         {% else %}
             <tr>
         {% endif %}
-        <a href="{% url 'produto_detail' data.id %}">
+        <a href="{% url 'orcamento_detail' data.id %}">
                 <th scope="col">
-                    <a href="{% url 'produto_detail' data.id %}">
+                    <a href="{% url 'orcamento_detail' data.id %}">
                     {{ data.pk }}</a>
                 </th>
                 <th scope="col">
-                    <a href="{% url 'produto_detail' data.id %}">
+                    <a href="{% url 'orcamento_detail' data.id %}">
                     {{ data.cliente }}</a>
                 </th>
                 <th scope="col" class="d-none d-sm-table-cell">{{ data.data_vencimento }}</th>

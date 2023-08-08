@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<div class="container-md">
+    <br>
+    <div class="row">
+        <div class="col col-12"><h1>Orçamento: <b>#{{ data.id }}</b></h1></div>
+    </div>
+ 
+    <table class="table table-striped">
+        <thead>
+            <th scope="col"><b>Cliente: </b></th>
+            <th scope="col">{{ cliente.nome }}</th>
+            <th scope="col">Contato: </th>
+            <th scope="col">{{ cliente.contato }}</th>
+        </thead>
+        <thead>
+            <th scope="col"><b>Vencimento: </b></th>
+            <th scope="col">{{ data.data_vencimento }}</th>
+            <th scope="col">Status: </th>
+            {% if data.status == status_aberto  %}
+                <th scope="col">
+            {% elif data.status == status_enviado  %}
+                <th scope="col" style="color: #bcd0c7;">
+            {% elif data.status == status_atrasado  %}
+                <th scope="col" class="atrasado">
+            {% elif data.status == status_vendido  %}
+                <th scope="col" class="vendido">
+            {% elif data.status == status_cancelado  %}
+                <th scope="col" class="cancelado">
+            {% else %}
+                <th scope="col">
+            {% endif %}
+            {{ data.status }}</th>
+        </thead>
+    </table>
+    <div class="collapse" id="mais_info">
+    <table class="table table-striped">
+        <thead>
+            <th scope="col">E-mail: </th>
+            <th scope="col">{{ cliente.email }} | {{ cliente.email2 }}</th>
+            <th scope="col">Telefone: </th>
+            <th scope="col">{{ cliente.telefone }} | {{ cliente.telefone2 }}</th>
+        </thead>
+        <thead>
+            <th scope="col">Data de criação: </th>
+            <th scope="col">{{ data.data_criacao }}</th>
+            <th scope="col">Ultima atividade: </th>
+            <th scope="col">{{ data.data_ultimo }}</th>
+        </thead>
+        <thead>
+            <th scope="col">Data do cadastro: </th>
+            <th scope="col" colspan="3">{{ data.data_criacao }}</th>
+        </thead>
+        
+        <thead>
+            <th scope="col" colspan="4">Observações: </th>
+        </thead>
+        <thead>
+            <th scope="col" colspan="4"><pre>{{ data.obs }}</pre></th>
+        </thead>
+    </table>
+    <br><br>
+    <div class="container">
+        <div>
+            <a href="{% url 'cliente_atualiza' data.id %}">[ Editar ]</a>
+        </div>
+        <div style="text-align: right; color: #dc3545;" >
+            <a href="{% url 'cliente_delete' data.id %}">[ Deletar ]</a>
+        </div>
+    </div></div><br><br>
+    <div class="text-center"><a href="#mais_info" class="collapsed" data-bs-toggle="collapse" aria-expanded="false" aria-controls="mais_info"><div id="a_mais_info">[Mais informações]</div></a></div><br><br>
+    
+    <br>
+</div>
+<div class="container-xxl">
+    <table class="table table-striped">
+        <thead class="table-light text-center">
+            <th class="col col-12" colspan="11">Lista de Produtos</th>
+        </thead>
+        <thead>
+            <th class="col col-5" colspan="3">Nome</th>
+            <th class="col col-1">Quantidade</th>
+            <th class="col col-1">Valor Final</th>
+            <th class="col col-1">Valor custo</th>
+            <th class="col col-1">Margem</th>
+            <th class="col col-2" colspan="1">Fornecedor</th>
+            <th class="col col-1">Editar</th>
+        </thead>
+        {% for reg in regorcamentos %}
+        <thead>
+            <th class="col col-5" colspan="3">Nome</th>
+            <th class="col col-1">Quantidade</th>
+            <th class="col col-1">Valor Final</th>
+            <th class="col col-1">Valor custo</th>
+            <th class="col col-1">Margem</th>
+            <th class="col col-2" colspan="1">Fornecedor</th>
+            <th class="col col-1">Editar</th>
+        </thead>
+        {% endfor %}
+        <thead class="table-light">
+            <th class="col col-3">---</th>
+            <th class="col col-1">Quantidade</th>
+            <th class="col col-1">00</th>
+            <th class="col col-1">Custo</th>
+            <th class="col col-1">00,00</th>
+            <th class="col col-2">Margem média</th>
+            <th class="col col-1">00,00%</th>
+            <th class="col col-1">Total</th>
+            <th class="col col-1">00,00</th>
+        </thead>
+    </table>
+</div>
+
+{% endblock %}
+ 

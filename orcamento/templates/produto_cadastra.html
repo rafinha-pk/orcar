@@ -6,7 +6,7 @@
     <div class="container">
         <!-- Security token by Django -->
         {% csrf_token %}
-        <table class="table table-dark table-striped">
+        <table class="table table-dark table-striped atualiza_valor">
             <thead><tr>
                 <td class="col col-2">Nome: </td>
                 <td class="col col-4">{{ form.nome }}</td>
@@ -26,6 +26,11 @@
                 <td class="col col-4">{{ form.margem }}</td>
             </tr></thead>
             <thead><tr>
+                <td class="col col-2">Valor final: </td>
+                <td class="col col-4">{{ form.valor_final }}</td>
+                <td class="col col-6" colspan="6"></td>
+            </tr></thead>
+            <thead><tr>
                 <td class="col col-12" colspan="12">Obs: </td>
             </tr></thead>
             <thead><tr>
@@ -36,7 +41,6 @@
                     {{ form.criador }}
                     {{ form.data_criacao }}
                     {{ form.data_ultimo }}
-                    {{ form.valor_final }}
                 </div>
             </tr></thead>
         </table>

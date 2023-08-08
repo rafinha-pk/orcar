@@ -80,10 +80,10 @@ class OrcamentoForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'data_ultimo': forms.DateInput(
-                attrs={'type':'date'}
+                attrs={'type':'datetime-local'}
                 ), 
             'data_criacao': forms.DateInput(
-                attrs={'type': 'date'}
+                attrs={'type': 'datetime-local'}
                 ),
             'data_vencimento': forms.DateInput(
                 attrs={'type': 'date'}

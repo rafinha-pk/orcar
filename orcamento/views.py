@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as dj_login
 from django.contrib.auth import logout as dj_logout
 from django.urls import reverse
+from django.utils import timezone
 from django.db.models import Q
 from .models import Clientes
 from .forms import ClienteForm
@@ -19,9 +20,12 @@ from .forms import FornecedorForm
 from .models import Produtos
 from .forms import ProdutoForm
 from .models import Orcamentos
-from .forms import Orcamentos
+from .forms import OrcamentoForm
 
+
+from .models import FormaPagamento
 from .models import StatusOrcamento
+from .models import RegOrcamentos
 
 # LOGIN
 
@@ -135,19 +139,50 @@ def orcamento_cadastra(request, pk):
     context["cliente"] = Clientes.objects.get(id= pk)
 
     HOJE = date.today()
+    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     VENCIMENTO = HOJE + timedelta(days=3)
     if request.POST:
         # se post
-        x=1
+        form = OrcamentoForm(request.POST or None)
+        form.instance.data_criacao = HOJE_HORA
+        form.instance.data_ultimo = HOJE_HORA
+        if form.is_valid():
+            novo_orcamento = form.save()
+            return HttpResponseRedirect('/orcamento/' + str(novo_orcamento.id))
+        else:
+            return render(request, 'base.html')
     else:
-        # se sim
+
         form = OrcamentoForm(initial={'criador':request.user,
-                                       'data_criacao': HOJE,
-                                       'data_ultimo':HOJE,
+                                       'data_criacao': HOJE_HORA,
+                                       'data_ultimo':HOJE_HORA,
                                        'data_vencimento':VENCIMENTO,
-                                       'status':StatusOrcamento.objects.get(id = 1)})
-        #context["form"] = form
-    return render(request, "orcamento_cadastra.html", context)
+                                       'status':StatusOrcamento.objects.get(id= 1),
+                                       'pagamento':FormaPagamento.objects.get(id= 1),
+                                       'quantidade':0,
+                                       'parcelas':1,
+                                       'cliente':pk,
+                                       })
+        context["form"] = form
+        context["hoje_hora"] = HOJE_HORA
+        return render(request, "orcamento_cadastra.html", context)
+
+def orcamento_detail(request, pk):
+    context = {}
+    context["data"] = Orcamentos.objects.get(id= pk)
+    id_cliente = context["data"].cliente.id
+    context["cliente"] = Clientes.objects.get(id= id_cliente)
+    context["status_aberto"] = StatusOrcamento.objects.get(id = 1)
+    context["status_enviado"] = StatusOrcamento.objects.get(id = 2)
+    context["status_atrasado"] = StatusOrcamento.objects.get(id = 3)
+    context["status_vendido"] = StatusOrcamento.objects.get(id = 4)
+    context["status_cancelado"] = StatusOrcamento.objects.get(id = 5)
+    context["regorcamentos"] = RegOrcamentos.objects.all().filter(orcamento= pk) 
+
+    HOJE = date.today()
+    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
+    return render(request, 'orcamento_detail.html', context)
+
 # CLIENTES
 
 def cliente_index(request):
@@ -309,12 +344,12 @@ def produto_cadastra(request):
     if request.POST:
         form = ProdutoForm(request.POST or None)
         if form.is_valid():
-            valor_final = (form.instance.valor_fornecedor * (
-                          100/ form.instance.margem
-                          )) / ((
-                          100 / form.instance.margem)-1)
+            #valor_final = (form.instance.valor_fornecedor * (
+                          #100/ form.instance.margem
+                          #)) / ((
+                          #100 / form.instance.margem)-1)
             
-            form.instance.valor_final = valor_final
+            #form.instance.valor_final = valor_final
 
             form.save()
             return HttpResponseRedirect('/produto')

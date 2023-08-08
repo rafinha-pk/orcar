@@ -1,4 +1,21 @@
 $(document).ready(function(){
+	/* colapse */
+	if ($('#bin_colaps').val())
+	{
+		if ($('#bin_colaps').val() <= 0)
+		{
+			var bin_colaps = "0";
+		}
+		else
+		{
+			var bin_colaps = "1";
+		}
+	}
+	else
+	{
+		var bin_colaps = "0";
+	}
+
 	/* mascaras **/
 	$('.money').mask("###.###.##0,00", {reverse: true});
 	$('.margem').mask("##,00", {reverse: false});
@@ -49,6 +66,21 @@ $(document).ready(function(){
 		$('#id_margem').mask("##,00", {reverse: false});
 	}
 
+	function trocaInfo()
+	{
+		if (bin_colaps == "1")
+		{
+			$('#a_mais_info').html("[Mais informações]");
+			bin_colaps = 0;
+		}
+		else
+		{
+			$('#a_mais_info').html("[Menos informações]");
+			bin_colaps = 1;
+		}
+		
+	}
+
 
 	/* ações */
 
@@ -92,4 +124,7 @@ $(document).ready(function(){
 	{
 		$('#forminho').submit();
 	});
+	$('#a_mais_info').click(function(){
+		trocaInfo();
+	})
 });

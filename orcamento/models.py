@@ -56,8 +56,8 @@ class Produtos(models.Model):
 	data_ultimo = models.DateField('Ultima atividade')
 	obs = models.TextField(blank=True)
 
-	#def __str__(self):
-		#return self
+	def __str__(self):
+		return self.nome
 
 class StatusOrcamento(models.Model):
 	nome = models.CharField(max_length=100)
@@ -79,9 +79,9 @@ class Orcamentos(models.Model):
 	data_ultimo = models.DateTimeField('Ultima atividade')
 	data_vencimento = models.DateField('Vencimento')
 	quantidade = models.IntegerField(blank=True, default=0)
-	valor_custo = models.DecimalField(max_digits = 10, decimal_places = 2, blank=True)
-	valor_final = models.DecimalField(max_digits = 10, decimal_places = 2, blank=True)
-	margem = models.DecimalField(max_digits = 5, decimal_places = 2, blank=True)
+	valor_custo = models.DecimalField(max_digits = 10, decimal_places = 2, blank=True, default=0)
+	valor_final = models.DecimalField(max_digits = 10, decimal_places = 2, blank=True, default=0)
+	margem = models.DecimalField(max_digits = 5, decimal_places = 2, blank=True, default=0)
 	status = models.ForeignKey(StatusOrcamento, blank=True, on_delete=models.SET(''))
 	pagamento = models.ForeignKey(FormaPagamento, blank=True, on_delete=models.SET(''))
 	parcelas = models.IntegerField(blank=True, default=1)
