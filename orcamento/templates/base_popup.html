@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Orcar 0.0.1 - Beta</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+<body data-bs-theme="dark">
+	{% if user.is_authenticated %}
+	{% block content %}
+	{% endblock %}
+	{% else %}
+	<div class="container">
+		<div class="row">
+			<div class="col col-12"><br><br></div>
+		</div>
+		<div class="row">
+			<div class="col col-3"></div>
+			<div class="col col-6">
+				<div class="container text-center border">
+				<div class="row">
+					<div class="col col-12 bg-light text-bg-light"><h2>Login</h2></div>
+				</div>
+				<form method="POST" action="{% url 'login' %}">
+					{% csrf_token %}
+				<div class="row">
+					<div class="col col-3"></div>
+					<div class="col col-6">
+						<br>
+						<input type="text" name="usuario" class="form-control"
+								placeholder="Usuario">
+					</div>
+					<div class="col col-3"></div>
+				</div>
+				<div class="row">
+					<div class="col col-3"></div>
+					<div class="col col-6">
+						<br>
+						<input type="password" name="senha" 
+								class="form-control" placeholder="Senha">
+					</div>
+					<div class="col col-3"></div>
+				</div>
+				<div class="row">
+					<div class="col col-3"></div>
+					<div class="col col-6"><br><input type="submit" value="Entrar" class="form-control"><br></div>
+					<div class="col col-3"></div>
+				</div>
+				</form>
+			</div>
+			</div>
+			<div class="col col-3"></div>
+		</div>
+	</div>
+	{% endif %}
+</body>
+</html>

@@ -127,4 +127,15 @@ $(document).ready(function(){
 	$('#a_mais_info').click(function(){
 		trocaInfo();
 	})
+	$('#orcamento_adiciona_produto').click(function() {
+	    var janela = window.open("cadastrar/produto/", "janela", "width=800, height=400");
+	    janela.resizeTo(800, 400);
+	    
+	    var interval = setInterval(function() {
+	        if (janela.closed) {
+	            clearInterval(interval);
+	            window.location.reload();
+	        }
+	    }, 1000);
+	});
 });

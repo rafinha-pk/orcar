@@ -6,6 +6,7 @@ from .models import Clientes
 from .models import Fornecedores
 from .models import Produtos
 from .models import Orcamentos
+from .models import RegOrcamentos
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -94,3 +95,30 @@ class OrcamentoForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs['class']=  'form-control'
+
+class RegOrcamentoForm(forms.ModelForm):
+    class Meta:
+        model = RegOrcamentos
+        fields = "__all__"
+        widgets = {
+            'data': forms.DateInput(
+                attrs={'type':'date'}
+                ), 
+            'valor_fornecedor': forms.DateInput(
+                attrs={'placeholder': 'R$ '}
+                ),
+            'valor_final': forms.DateInput(
+                attrs={'placeholder': 'R$ '}
+                ),
+            'margem': forms.DateInput(
+                attrs={'placeholder': '% '}
+                ),
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class']=  'form-control'
+        self.fields['valor_fornecedor'].widget.attrs['class'] += ' money'
+        self.fields['valor_final'].widget.attrs['class'] += ' money'
+        self.fields['margem'].widget.attrs['class'] += ' margem'

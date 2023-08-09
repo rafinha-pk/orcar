@@ -7,6 +7,10 @@ urlpatterns = [
     path('', views.orcamento_index, name="home"),
     path('orcamento/cadastrar/<int:pk>/', views.orcamento_cadastra, name="orcamento_cadastra"),
     path('orcamento/<int:pk>/', views.orcamento_detail, name="orcamento_detail"),
+    path('orcamento/<int:pk>/cadastrar/produto/', views.orcamento_cadastrar_produto, 
+                                                    name="orcamento_cadastrar_produto"),
+    path('orcamento/<int:pk>/cadastrar/produto/<int:produto>', views.orcamento_cadastrar_produto_add, 
+                                                    name="orcamento_cadastrar_produto_add"),
 
     path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),

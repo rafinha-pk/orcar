@@ -73,29 +73,32 @@
     
     <br>
 </div>
-<div class="container-xxl">
+<div class="container-xl">
     <table class="table table-striped">
-        <thead class="table-light text-center">
-            <th class="col col-12" colspan="11">Lista de Produtos</th>
+        <thead class="text-center">
+            <th class="col col-11" colspan="8">Lista de Produtos</th>
+            <th class="col col-1"><button class="btn btn-outline-light" id="orcamento_adiciona_produto">Adicionar</button></th>
         </thead>
-        <thead>
-            <th class="col col-5" colspan="3">Nome</th>
-            <th class="col col-1">Quantidade</th>
-            <th class="col col-1">Valor Final</th>
-            <th class="col col-1">Valor custo</th>
-            <th class="col col-1">Margem</th>
-            <th class="col col-2" colspan="1">Fornecedor</th>
-            <th class="col col-1">Editar</th>
+        <thead class="table-light">
+            <th class="col col-4" colspan="2"><b>Nome</b></th>
+            <th class="col col-1"><b>Quantidade</b></th>
+            <th class="col col-1"><div style="display: ruby;"><b>Valor Final</b></div></th>
+            <th class="col col-1"><div style="display: ruby;"><b>Valor custo</b></div></th>
+            <th class="col col-1"><b>Margem</b></th>
+            <th class="col col-2" colspan="1"><b>Fornecedor</b></th>
+            <th class="col col-1"><b>Editar</b></th>
+            <th class="col col-1"><b>Excluir</b></th>
         </thead>
         {% for reg in regorcamentos %}
         <thead>
-            <th class="col col-5" colspan="3">Nome</th>
-            <th class="col col-1">Quantidade</th>
-            <th class="col col-1">Valor Final</th>
-            <th class="col col-1">Valor custo</th>
-            <th class="col col-1">Margem</th>
-            <th class="col col-2" colspan="1">Fornecedor</th>
-            <th class="col col-1">Editar</th>
+            <th class="col col-4" colspan="2">{{ reg.produto }}</th>
+            <th class="col col-1">{{ reg.quantidade }}</th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ reg.valor_final }}</div></th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ reg.valor_fornecedor }}</div></th>
+            <th class="col col-1"><div style="display: ruby;">{{ reg.margem }} %</div></th>
+            <th class="col col-2" colspan="1">{{ reg.fornecedor }}</th>
+            <th class="col col-1"><button class="btn btn-outline-secondary">Editar</button></th>
+            <th class="col col-1"><button class="btn btn-outline-danger">Excluir</button></th>
         </thead>
         {% endfor %}
         <thead class="table-light">

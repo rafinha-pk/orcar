@@ -94,7 +94,7 @@ class RegOrcamentos(models.Model):
 	produto = models.ForeignKey(Produtos, blank=True, on_delete=models.SET(''))
 	quantidade = models.IntegerField(blank=True)
 	fornecedor = models.ForeignKey(Fornecedores, blank=True, on_delete=models.SET(''))
-	valor_custo = models.DecimalField(max_digits= 10, decimal_places = 2, blank=True)
+	valor_fornecedor = models.DecimalField(max_digits= 10, decimal_places = 2, blank=True)
 	valor_final = models.DecimalField(max_digits= 10, decimal_places = 2, blank=True)
 	margem = models.DecimalField(max_digits = 5, decimal_places = 2, blank=True)
 	data = models.DateTimeField("Data")

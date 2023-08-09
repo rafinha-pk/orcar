@@ -26,6 +26,7 @@ from .forms import OrcamentoForm
 from .models import FormaPagamento
 from .models import StatusOrcamento
 from .models import RegOrcamentos
+from .forms import RegOrcamentoForm
 
 # LOGIN
 
@@ -182,6 +183,54 @@ def orcamento_detail(request, pk):
     HOJE = date.today()
     HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     return render(request, 'orcamento_detail.html', context)
+
+def orcamento_cadastrar_produto(request, pk):
+    context = {}
+    context["pk"] = pk
+    if request.POST:
+        context["dataset"] = Produtos.objects.all().filter(
+                            Q(nome__icontains= request.POST.get('busca')) |
+                            Q(pn__icontains= request.POST.get('busca'))
+                            ).order_by('-pk')[:30]
+    else:
+        context["dataset"] = Produtos.objects.all().order_by('-pk')[:20]
+        
+    return render(request, "produto_index_popup.html", context)
+
+def orcamento_cadastrar_produto_add(request, pk, produto):
+    context = {}
+    context["pk"] = pk
+    add_produto = Produtos.objects.get(id= produto)
+    context["produto"] = add_produto
+    HOJE = date.today()
+    if request.POST:
+        form = RegOrcamentoForm(request.POST or None)
+        if form.is_valid():
+            novo_registro= form.save()
+            produto_atualizar = Produtos.objects.get(id= produto)
+            form_atualiza_produto = ProdutoForm(instance= produto_atualizar)
+            form_atualiza_produto.instance.valor_final = form.instance.valor_final
+            form_atualiza_produto.instance.valor_fornecedor = form.instance.valor_fornecedor
+            form_atualiza_produto.instance.margem = form.instance.margem
+            form_atualiza_produto.instance.data_ultimo = HOJE
+            if form_atualiza_produto.is_valid():
+                form_atualiza_produto.save()
+            return HttpResponseRedirect('/produto/')
+    else:
+        form = RegOrcamentoForm(initial={'orcamento':pk, 
+                                    'data':HOJE, 
+                                    'produto': add_produto,
+                                    'quantidade':'1',
+                                    'fornecedor':add_produto.fornecedor,
+                                    'valor_fornecedor':add_produto.valor_fornecedor,
+                                    'valor_final':add_produto.valor_final,
+                                    'margem':add_produto.margem,
+                                    })
+        context["form"] = form
+        return render(request, "orcamento_registro.html", context)
+
+
+
 
 # CLIENTES
 
