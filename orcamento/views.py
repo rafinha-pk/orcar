@@ -178,7 +178,27 @@ def orcamento_detail(request, pk):
     context["status_atrasado"] = StatusOrcamento.objects.get(id = 3)
     context["status_vendido"] = StatusOrcamento.objects.get(id = 4)
     context["status_cancelado"] = StatusOrcamento.objects.get(id = 5)
-    context["regorcamentos"] = RegOrcamentos.objects.all().filter(orcamento= pk) 
+    regorcamento_obj_produtos = RegOrcamentos.objects.all().filter(orcamento= pk)
+    context["regorcamentos"] = regorcamento_obj_produtos
+    total_valor_fornecedor = 0
+    total_valor_final = 0
+    total_margem = 0
+    quantidade = 0
+    for reg_obj_produto in regorcamento_obj_produtos:
+        total_valor_fornecedor += reg_obj_produto.valor_fornecedor
+        total_valor_final += reg_obj_produto.valor_final
+        total_margem += reg_obj_produto.margem
+        quantidade += 1
+    if quantidade > 0:
+        total_margem = total_margem / quantidade
+    else:
+        total_margem = 0
+    total_margem = round(total_margem, 2)
+    context["total_fornecedor"] = total_valor_fornecedor
+    context["total_final"] = total_valor_final
+    context["total_margem"] = total_margem
+    context["quantidade"] = quantidade
+
 
     HOJE = date.today()
     HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
@@ -203,19 +223,46 @@ def orcamento_cadastrar_produto_add(request, pk, produto):
     add_produto = Produtos.objects.get(id= produto)
     context["produto"] = add_produto
     HOJE = date.today()
+    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     if request.POST:
         form = RegOrcamentoForm(request.POST or None)
         if form.is_valid():
+            atualiza_produto = Produtos.objects.get(id= produto)
+            atualiza_produto.valor_final = round(form.instance.valor_final, 2)
+            atualiza_produto.valor_fornecedor = round(form.instance.valor_fornecedor, 2)
+            atualiza_produto.margem = round(form.instance.margem, 2)
+            atualiza_produto.fornecedor = form.instance.fornecedor
+            atualiza_produto.data_ultimo = HOJE
+            atualiza_produto.criador = request.user
+            
+            atualiza_orcamento = Orcamentos.objects.get(id= pk)
+            #atualiza_orcamento = OrcamentoForm(instance= orcamento_atualizar)
+            atualiza_orcamento.quantidade += form.instance.quantidade
+
+            if form.instance.quantidade > 1:
+                form.instance.valor_fornecedor = form.instance.valor_fornecedor * form.instance.quantidade
+                form.instance.valor_final = form.instance.valor_final * form.instance.quantidade
+            
+            atualiza_orcamento.valor_custo += form.instance.valor_fornecedor
+            atualiza_orcamento.valor_custo = round(atualiza_orcamento.valor_custo, 2)
+            atualiza_orcamento.valor_final += form.instance.valor_final
+            atualiza_orcamento.valor_final = round(atualiza_orcamento.valor_final, 2)
+
+            if atualiza_orcamento.margem <= 0:
+                atualiza_orcamento.margem += form.instance.margem
+            else:
+                atualiza_orcamento.margem += form.instance.margem
+                atualiza_orcamento.margem = atualiza_orcamento.margem / 2
+
+            atualiza_orcamento.margem = round(atualiza_orcamento.margem, 2)
+            atualiza_orcamento.data_ultimo = HOJE_HORA
+
+            atualiza_produto.save()
+            atualiza_orcamento.save()
             novo_registro= form.save()
-            produto_atualizar = Produtos.objects.get(id= produto)
-            form_atualiza_produto = ProdutoForm(instance= produto_atualizar)
-            form_atualiza_produto.instance.valor_final = form.instance.valor_final
-            form_atualiza_produto.instance.valor_fornecedor = form.instance.valor_fornecedor
-            form_atualiza_produto.instance.margem = form.instance.margem
-            form_atualiza_produto.instance.data_ultimo = HOJE
-            if form_atualiza_produto.is_valid():
-                form_atualiza_produto.save()
-            return HttpResponseRedirect('/produto/')
+            #return HttpResponse('<script>alert(' + str(  ) + ')</script>')
+            return HttpResponse('<script>window.close();</script>')
+            
     else:
         form = RegOrcamentoForm(initial={'orcamento':pk, 
                                     'data':HOJE, 
@@ -228,6 +275,12 @@ def orcamento_cadastrar_produto_add(request, pk, produto):
                                     })
         context["form"] = form
         return render(request, "orcamento_registro.html", context)
+
+def orcamento_delete_produto(request, pk, reg):
+    context = {}
+    orcamento = Orcamentos.objects.get(id= pk)
+    registro = reg
+    registro_apagar = RegOrcamentos.objects.get(id= registro)
 
 
 

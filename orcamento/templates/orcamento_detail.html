@@ -62,9 +62,6 @@
     </table>
     <br><br>
     <div class="container">
-        <div>
-            <a href="{% url 'cliente_atualiza' data.id %}">[ Editar ]</a>
-        </div>
         <div style="text-align: right; color: #dc3545;" >
             <a href="{% url 'cliente_delete' data.id %}">[ Deletar ]</a>
         </div>
@@ -104,13 +101,13 @@
         <thead class="table-light">
             <th class="col col-3">---</th>
             <th class="col col-1">Quantidade</th>
-            <th class="col col-1">00</th>
+            <th class="col col-1">{{ data.quantidade }}</th>
             <th class="col col-1">Custo</th>
-            <th class="col col-1">00,00</th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ data.valor_custo }}</div></th>
             <th class="col col-2">Margem média</th>
-            <th class="col col-1">00,00%</th>
+            <th class="col col-1"><div style="display: ruby;">{{ data.margem }}%</div></th>
             <th class="col col-1">Total</th>
-            <th class="col col-1">00,00</th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ data.valor_final }}</div></th>
         </thead>
     </table>
 </div>
