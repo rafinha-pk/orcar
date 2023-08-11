@@ -184,13 +184,16 @@ def orcamento_detail(request, pk):
     total_valor_final = 0
     total_margem = 0
     quantidade = 0
+    quantidade_item = 0
     for reg_obj_produto in regorcamento_obj_produtos:
-        total_valor_fornecedor += reg_obj_produto.valor_fornecedor
-        total_valor_final += reg_obj_produto.valor_final
+        quantidade += reg_obj_produto.quantidade
+        total_valor_fornecedor += reg_obj_produto.valor_fornecedor * reg_obj_produto.quantidade
+        total_valor_final += reg_obj_produto.valor_final * reg_obj_produto.quantidade
         total_margem += reg_obj_produto.margem
-        quantidade += 1
-    if quantidade > 0:
-        total_margem = total_margem / quantidade
+        quantidade_item += 1
+    if quantidade > 1:
+        total_margem = total_margem / quantidade_item
+
     else:
         total_margem = 0
     total_margem = round(total_margem, 2)
@@ -239,22 +242,11 @@ def orcamento_cadastrar_produto_add(request, pk, produto):
             #atualiza_orcamento = OrcamentoForm(instance= orcamento_atualizar)
             atualiza_orcamento.quantidade += form.instance.quantidade
 
-            if form.instance.quantidade > 1:
+            """if form.instance.quantidade > 1:
                 form.instance.valor_fornecedor = form.instance.valor_fornecedor * form.instance.quantidade
                 form.instance.valor_final = form.instance.valor_final * form.instance.quantidade
-            
-            atualiza_orcamento.valor_custo += form.instance.valor_fornecedor
-            atualiza_orcamento.valor_custo = round(atualiza_orcamento.valor_custo, 2)
-            atualiza_orcamento.valor_final += form.instance.valor_final
-            atualiza_orcamento.valor_final = round(atualiza_orcamento.valor_final, 2)
-
-            if atualiza_orcamento.margem <= 0:
-                atualiza_orcamento.margem += form.instance.margem
-            else:
-                atualiza_orcamento.margem += form.instance.margem
-                atualiza_orcamento.margem = atualiza_orcamento.margem / 2
-
-            atualiza_orcamento.margem = round(atualiza_orcamento.margem, 2)
+            """
+            #atualiza_orcamento.margem = round(atualiza_orcamento.margem, 2)
             atualiza_orcamento.data_ultimo = HOJE_HORA
 
             atualiza_produto.save()

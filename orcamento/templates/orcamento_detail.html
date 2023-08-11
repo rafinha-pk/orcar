@@ -78,9 +78,9 @@
         </thead>
         <thead class="table-light">
             <th class="col col-4" colspan="2"><b>Nome</b></th>
-            <th class="col col-1"><b>Quantidade</b></th>
-            <th class="col col-1"><div style="display: ruby;"><b>Valor Final</b></div></th>
-            <th class="col col-1"><div style="display: ruby;"><b>Valor custo</b></div></th>
+            <th class="col col-1"><b>Qtd</b></th>
+            <th class="col col-1"><div style="display: ruby;"><b>Venda</b></div></th>
+            <th class="col col-1"><div style="display: ruby;"><b>Custo</b></div></th>
             <th class="col col-1"><b>Margem</b></th>
             <th class="col col-2" colspan="1"><b>Fornecedor</b></th>
             <th class="col col-1"><b>Editar</b></th>
@@ -94,20 +94,22 @@
             <th class="col col-1"><div style="display: ruby;">R$ {{ reg.valor_fornecedor }}</div></th>
             <th class="col col-1"><div style="display: ruby;">{{ reg.margem }} %</div></th>
             <th class="col col-2" colspan="1">{{ reg.fornecedor }}</th>
-            <th class="col col-1"><button class="btn btn-outline-secondary">Editar</button></th>
-            <th class="col col-1"><button class="btn btn-outline-danger">Excluir</button></th>
+            <th class="col col-1"><button class="btn btn-outline-secondary"> [ ] </button></th>
+            <th class="col col-1"><button class="btn btn-outline-danger"> X </button></th>
         </thead>
         {% endfor %}
+    </table>
+    <table class="table table-striped">
         <thead class="table-light">
             <th class="col col-3">---</th>
             <th class="col col-1">Quantidade</th>
-            <th class="col col-1">{{ data.quantidade }}</th>
+            <th class="col col-1">{{ quantidade }}</th>
             <th class="col col-1">Custo</th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ data.valor_custo }}</div></th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ total_fornecedor }}</div></th>
             <th class="col col-2">Margem média</th>
-            <th class="col col-1"><div style="display: ruby;">{{ data.margem }}%</div></th>
+            <th class="col col-1"><div style="display: ruby;">{{ total_margem }}%</div></th>
             <th class="col col-1">Total</th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ data.valor_final }}</div></th>
+            <th class="col col-1"><div style="display: ruby;">R$ {{ total_final }}</div></th>
         </thead>
     </table>
 </div>
