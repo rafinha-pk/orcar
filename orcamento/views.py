@@ -170,7 +170,24 @@ def orcamento_cadastra(request, pk):
 
 def orcamento_detail(request, pk):
     context = {}
-    context["data"] = Orcamentos.objects.get(id= pk)
+    orcamento = Orcamentos.objects.get(id= pk)
+    HOJE = date.today()
+    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
+    if orcamento.criador == request.user:
+        e_dono = "1"
+    else:
+        e_dono = "0"
+    context["e_dono"] = e_dono
+    if request.POST:
+        novo_status = request.POST.get("status")
+        novo_status = StatusOrcamento.objects.get(id= novo_status)
+        orcamento.status = novo_status
+        orcamento.data_ultimo = HOJE_HORA
+        context["log"] = orcamento.save()
+    else:
+        context["log"] = "não salvo"
+
+    context["data"] = orcamento
     id_cliente = context["data"].cliente.id
     context["cliente"] = Clientes.objects.get(id= id_cliente)
     context["status_aberto"] = StatusOrcamento.objects.get(id = 1)
@@ -202,9 +219,6 @@ def orcamento_detail(request, pk):
     context["total_margem"] = total_margem
     context["quantidade"] = quantidade
 
-
-    HOJE = date.today()
-    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     return render(request, 'orcamento_detail.html', context)
 
 def orcamento_cadastrar_produto(request, pk):
@@ -273,9 +287,77 @@ def orcamento_delete_produto(request, pk, reg):
     orcamento = Orcamentos.objects.get(id= pk)
     registro = reg
     registro_apagar = RegOrcamentos.objects.get(id= registro)
+    if request.method == "POST":
+        registro_apagar.delete()
+        return HttpResponse('<script>window.close();</script>')
+    else:
+        context["data"] = registro_apagar
 
+    return render(request, "orcamento_registro_delete.html", context)
 
+def orcamento_registro_produto(request, pk, reg):
+    context = {}
+    orcamento = Orcamentos.objects.get(id= pk)
+    registro = get_object_or_404(RegOrcamentos, id=reg)
+    produto = registro.produto
+    context["produto"] = produto
+    form = RegOrcamentoForm(request.POST or None, instance = registro)
+    if request.POST:
+        if form.is_valid():
+            HOJE = date.today()
+            HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
+            form.instance.data = HOJE 
+            orcamento.data_ultimo = HOJE_HORA
+            form.save()
+            orcamento.save()
+            produto.valor_final = form.instance.valor_final
+            produto.valor_fornecedor = form.instance.valor_fornecedor
+            produto.margem = form.instance.margem
+            produto.fornecedor = form.instance.fornecedor
+            produto.data_ultimo = HOJE
+            produto.save()
+            return HttpResponse('<script>window.close();</script>')
+    context["form"] = form
 
+    return render(request, "orcamento_registro.html", context)
+
+def orcamento_imprimir(request, pk):
+    context = {}
+    total_registro = {}
+    orcamento = Orcamentos.objects.get(id= pk)
+    HOJE = date.today()
+    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
+
+    context["data"] = orcamento
+    id_cliente = context["data"].cliente.id
+    context["cliente"] = Clientes.objects.get(id= id_cliente)
+    regorcamento_obj_produtos = RegOrcamentos.objects.all().filter(orcamento= pk)
+    context["regorcamentos"] = regorcamento_obj_produtos
+    total_valor_fornecedor = 0
+    total_valor_final = 0
+    total_margem = 0
+    quantidade = 0
+    quantidade_item = 0
+    for reg_obj_produto in regorcamento_obj_produtos:
+        quantidade += reg_obj_produto.quantidade
+        total_valor_fornecedor += reg_obj_produto.valor_fornecedor * reg_obj_produto.quantidade
+        total_valor_final += reg_obj_produto.valor_final * reg_obj_produto.quantidade
+        total_registro[reg_obj_produto.id] = reg_obj_produto.valor_final * reg_obj_produto.quantidade
+        total_margem += reg_obj_produto.margem
+        quantidade_item += 1
+    if quantidade > 1:
+        total_margem = total_margem / quantidade_item
+
+    else:
+        total_margem = 0
+    total_margem = round(total_margem, 2)
+    context["total_fornecedor"] = total_valor_fornecedor
+    context["total_final"] = total_valor_final
+    context["total_margem"] = total_margem
+    context["quantidade"] = quantidade
+    context["total_registro"] = total_registro
+
+    return render(request, 'orcamento_imprimir.html', context)
 
 # CLIENTES
 

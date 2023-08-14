@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+<br>
+<div class="container text-center">
+    <div class="card" style="width: 100%;">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="card-title">
+                <h1 style="color: #dc3545;">ATENÇÃO!</h1>
+            </div>
+            <div class="card-text">
+                <h2>Realmente quer apagar <b>"{{ data.produto }}"?</b></h2>
+                <br>Está ação não poderá ser desfeita!<br><br>
+                <input type="submit" class="form-control btn btn-outline-danger"
+                                    value="SIM" />
+                <br><br>
+                <a href="/produto/">
+                    <button type="button" 
+                            class="form-control btn btn-outline-secondary">
+                            Cancelar
+                    </button>
+                </a>
+            </div>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

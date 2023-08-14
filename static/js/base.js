@@ -1,3 +1,16 @@
+function criaJanela(x) 
+	{
+	    var janela = window.open(x, "janela", "width=800, height=500");
+	    janela.resizeTo(800, 500);
+	    
+	    var interval = setInterval(function() {
+	        if (janela.closed) {
+	            clearInterval(interval);
+	            window.location.reload();
+	        }
+	    }, 1000);
+	}
+
 $(document).ready(function(){
 	/* colapse */
 	if ($('#bin_colaps').val())
@@ -80,6 +93,7 @@ $(document).ready(function(){
 		}
 		
 	}
+	
 
 
 	/* ações */
@@ -128,14 +142,9 @@ $(document).ready(function(){
 		trocaInfo();
 	})
 	$('#orcamento_adiciona_produto').click(function() {
-	    var janela = window.open("cadastrar/produto/", "janela", "width=800, height=400");
-	    janela.resizeTo(800, 400);
-	    
-	    var interval = setInterval(function() {
-	        if (janela.closed) {
-	            clearInterval(interval);
-	            window.location.reload();
-	        }
-	    }, 1000);
+		criaJanela("cadastrar/produto/");
 	});
+	$('#status').change(function(){
+		$('#atualiza-status').submit();
+	})
 });

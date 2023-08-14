@@ -1,11 +1,58 @@
-{% extends "base.html" %}
- 
-{% block content %}
-<div class="container-md">
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Orcar 0.0.1 - Beta</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+<body data-bs-theme="light">
+<div class="">
+    <table class="table">
+        <thead>
+            <th scope="col col-6" style="max-width: 50%;" class="text-center"><img src="{% static 'img/logo.png' %}" class="img-fluid" style="width: 200px;"></th>
+            <th scope="col col-10" style="text-align: left;"><b>Papatec Informatica e Tecnologia</b><br>(19) 3426-8000<br>(19) 99994-1818<br>Av. do Café - 867 - Paulista, Piracicaba - SP</th>
+        </thead>
+    </table>
+    <table class="table">
+        <thead>
+            <th scope="col col-6" class="align-middle"><h2>Orçamento: # {{ data.id }}</h2></th>
+            <th scope="col col-6" style="text-align: right;" class="align-middle"><b>{{ data.data_ultimo }}</b></th>
+        </thead>
+        <thead>
+            <th scope="col col-6"><b>Valido até: </b>{{ data.data_vencimento }}</th>
+            <th scope="col col-6" style="text-align: right;"><b>Vendedor: </b>{{ data.criador }}</th>
+        </thead>
+    </table>
+    <br><br>
+    <table class="table">
+        <thead>
+            <th scope="col">Produto</th>
+            <th scope="col">Valor Unitario</th>
+            <th scope="col">Quantidade</th>
+            <th scope="col">Total</th>
+        </thead>
+        {% for reg in regorcamentos %}
+        <thead>
+            <th scope="col">{{ reg.produto }}</th>
+            <th scope="col">{{ reg.preco_final }}</th>
+            <th scope="col">{{ reg.quantidade }}</th>
+            <th scope="col">{{ total_registro }}</th>
+        </thead>
+        {% endfor %}
+    </table>
+<!--
     <br>
     <div class="row">
         <div class="col col-11"><h1>Orçamento: <b>#{{ data.id }}</b></h1></div>
-        <div class="col col-1"><a href="{% url 'orcamento_imprimir' data.id %}" target="_BLANK"><button class="btn btn-outline-light">Imprimir</button></a></div>
+        <div class="col col-1"><a href="{% url 'produto' %}"><button class="btn btn-outline-light">Imprimir</button></a></div>
     </div>
  
     <table class="table table-striped">
@@ -109,8 +156,7 @@
             <th class="col col-1">Total</th>
             <th class="col col-1"><div style="display: ruby;">R$ {{ total_final }}</div></th>
         </thead>
-    </table>
+    </table>-->
 </div>
-<br><br>
-{% endblock %}
- 
+ </body>
+ </html>
