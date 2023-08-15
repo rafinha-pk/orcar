@@ -4,10 +4,14 @@
 	src:url('/static/font/Ubuntu-Regular.ttf');
 }
 
-body
+body, html
 {
-	border = 0;
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
 	font-family: Ubuntu;
+	display: flex;
+    flex-direction: column;
 }
 a
 {
@@ -62,4 +66,11 @@ tr:hover th, tr:hover th a
 .cancelado:hover
 {
 	--bs-table-color: #bcd0c7;
+}
+footer
+{
+	position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1px;
 }

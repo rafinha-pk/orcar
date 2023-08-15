@@ -17,10 +17,11 @@
         </thead>
         <thead>
             <th scope="col"><b>Vencimento: </b></th>
-            <th scope="col">{{ data.data_vencimento }}</th>
+            <th scope="col">
+            <form id="atualiza-status" method="POST">{% csrf_token %}
+            {% if e_dono == "1" %}<input type="date" class="form-control" name="vencimento" id="vencimento" value="{{ data.data_vencimento|date:"Y-m-d" }}">{% else %}{{ data.data_vencimento }} {% endif %}</th>
             <th scope="col">Status: </th>
             <th scope="col">{% if e_dono == "1" %}
-                <form id="atualiza-status" method="POST">{% csrf_token %}
                     <select id="status" name="status" class="form-control">
                     <option value="1" {% if data.status == status_aberto  %} SELECTED {% else %} {% endif %}>Aberto</option>
                     <option value="2" {% if data.status == status_enviado  %} SELECTED {% else %} {% endif %}>Enviado</option>
@@ -28,7 +29,7 @@
                     <option value="4" {% if data.status == status_vendido  %} SELECTED {% else %} {% endif %}>Vendido</option>
                     <option value="5" {% if data.status == status_cancelado  %} SELECTED {% else %} {% endif %}>Cancelado</option>
                     </select>
-                </form>{% else %} {{ data.status }} {% endif %}
+                {% else %} {{ data.status }} {% endif %}
             </th>
         </thead>
     </table>
@@ -46,16 +47,16 @@
             <th scope="col">Ultima atividade: </th>
             <th scope="col">{{ data.data_ultimo }}</th>
         </thead>
-        <thead>
-            <th scope="col">Data do cadastro: </th>
-            <th scope="col" colspan="3">{{ data.data_criacao }}</th>
-        </thead>
         
         <thead>
             <th scope="col" colspan="4">Observações: </th>
         </thead>
         <thead>
-            <th scope="col" colspan="4"><pre>{{ data.obs }}</pre></th>
+            <th scope="col" colspan="4">
+                {% if e_dono == "1" %}
+                <textarea class="form-control" id="obs" name="obs">{{ data.obs }}</textarea>
+                {% else %}<pre>{{ data.obs }}</pre>{% endif %}
+            </th></form>
         </thead>
     </table>
     <br><br>

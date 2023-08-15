@@ -147,4 +147,10 @@ $(document).ready(function(){
 	$('#status').change(function(){
 		$('#atualiza-status').submit();
 	})
+	$('#vencimento').change(function(){
+		$('#atualiza-status').submit();
+	})
+	$('#obs').change(function(){
+		$('#atualiza-status').submit();
+	})
 });

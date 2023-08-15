@@ -2,6 +2,7 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 import re
+import locale
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import HttpResponseRedirect
@@ -21,22 +22,23 @@ from .models import Produtos
 from .forms import ProdutoForm
 from .models import Orcamentos
 from .forms import OrcamentoForm
-
-
 from .models import FormaPagamento
 from .models import StatusOrcamento
 from .models import RegOrcamentos
 from .forms import RegOrcamentoForm
 
+# GLOBAIS
+
+HOJE = date.today()
+HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
+
 # LOGIN
 
 def login(request):
-    html = "Time is"
     if request.POST:
         usuario = request.POST["usuario"]
         senha = request.POST["senha"]
         user = authenticate(request, username=usuario, password=senha)
-        html = "Usuario: " + usuario + " - senha: " + senha
         if user is not None:
             if user.is_active:
                 dj_login(request, user)
@@ -45,21 +47,19 @@ def login(request):
                 html= "usuario bloqueado!"
                 return HttpResponse(html)
         else:
-            return HttpResponse(html)
-            #return HttpResponseRedirect('/fornecedor')
+            return HttpResponseRedirect("/")
     else:
-        return HttpResponse(html)
+        return HttpResponseRedirect("/")
 
 def logout(request):
 
     dj_logout(request)
-    return HttpResponseRedirect('/cliente')
+    return HttpResponseRedirect('/')
 
 # ORÇAMENTOS
 
 def orcamento_index(request):
     context = {}
-    HOJE = date.today()
     DATA_MAXIMA = HOJE + timedelta(days=30)
     DATA_MINIMA = HOJE - timedelta(days=30)
     lista_status = StatusOrcamento.objects.all()
@@ -110,37 +110,36 @@ def orcamento_index(request):
 
         context["dataset"] = dataset.order_by('status', '-data_ultimo')
     else:
-        # fazer uma verificação da data_ultimo < data_vencimento
-        vencidos = Orcamentos.objects.filter(
-                            Q(data_vencimento__lt = HOJE
-                                ), Q(criador = request.user)).exclude(
-                                    status = StatusOrcamento.objects.get(id = 3)
-                                    ).exclude(
-                                    status = StatusOrcamento.objects.get(id = 4)
-                                    ).exclude(
-                                    status = StatusOrcamento.objects.get(id = 5)
-                                    )
-        for vencido in vencidos:
-            vencido.status = StatusOrcamento.objects.get(id = 3)
-            vencido.save()
+        if request.user.is_authenticated:
 
-        context["data_maxima"] = DATA_MAXIMA
-        context["data_minima"] = DATA_MINIMA
-        context["meus"] = "1"
-        context["dataset"] = Orcamentos.objects.all().filter(
-                            Q(data_ultimo__gte = DATA_MINIMA), 
-                            Q(data_ultimo__lte = DATA_MAXIMA),
-                            Q(criador = request.user)
-                            ).order_by('status', '-data_ultimo')
+            # fazer uma verificação da data_ultimo < data_vencimento
+            vencidos = Orcamentos.objects.filter(
+                                Q(data_vencimento__lt = HOJE
+                                    ), Q(criador = request.user)).exclude(
+                                        status = StatusOrcamento.objects.get(id = 3)
+                                        ).exclude(
+                                        status = StatusOrcamento.objects.get(id = 4)
+                                        ).exclude(
+                                        status = StatusOrcamento.objects.get(id = 5)
+                                        )
+            for vencido in vencidos:
+                vencido.status = StatusOrcamento.objects.get(id = 3)
+                vencido.save()
+
+            context["data_maxima"] = DATA_MAXIMA
+            context["data_minima"] = DATA_MINIMA
+            context["meus"] = "1"
+            context["dataset"] = Orcamentos.objects.all().filter(
+                                Q(data_ultimo__gte = DATA_MINIMA), 
+                                Q(data_ultimo__lte = DATA_MAXIMA),
+                                Q(criador = request.user)
+                                ).order_by('status', '-data_ultimo')
         
     return render(request, "orcamento_index.html", context)
 
 def orcamento_cadastra(request, pk):
     context = {}
     context["cliente"] = Clientes.objects.get(id= pk)
-
-    HOJE = date.today()
-    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     VENCIMENTO = HOJE + timedelta(days=3)
     if request.POST:
         # se post
@@ -171,8 +170,6 @@ def orcamento_cadastra(request, pk):
 def orcamento_detail(request, pk):
     context = {}
     orcamento = Orcamentos.objects.get(id= pk)
-    HOJE = date.today()
-    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     if orcamento.criador == request.user:
         e_dono = "1"
     else:
@@ -180,9 +177,15 @@ def orcamento_detail(request, pk):
     context["e_dono"] = e_dono
     if request.POST:
         novo_status = request.POST.get("status")
+        novo_vencimento = request.POST.get("vencimento")
+        novo_obs = request.POST.get("obs")
+        if novo_obs == None:
+            novo_obs = ""
         novo_status = StatusOrcamento.objects.get(id= novo_status)
         orcamento.status = novo_status
+        orcamento.obs = novo_obs
         orcamento.data_ultimo = HOJE_HORA
+        orcamento.data_vencimento = datetime.strptime(novo_vencimento, '%Y-%m-%d').date()
         context["log"] = orcamento.save()
     else:
         context["log"] = "não salvo"
@@ -218,6 +221,11 @@ def orcamento_detail(request, pk):
     context["total_final"] = total_valor_final
     context["total_margem"] = total_margem
     context["quantidade"] = quantidade
+    orcamento.valor_final = total_valor_final
+    orcamento.valor_custo = total_valor_fornecedor
+    orcamento.marge = total_margem
+    orcamento.save()
+
 
     return render(request, 'orcamento_detail.html', context)
 
@@ -239,8 +247,6 @@ def orcamento_cadastrar_produto_add(request, pk, produto):
     context["pk"] = pk
     add_produto = Produtos.objects.get(id= produto)
     context["produto"] = add_produto
-    HOJE = date.today()
-    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
     if request.POST:
         form = RegOrcamentoForm(request.POST or None)
         if form.is_valid():
@@ -251,22 +257,12 @@ def orcamento_cadastrar_produto_add(request, pk, produto):
             atualiza_produto.fornecedor = form.instance.fornecedor
             atualiza_produto.data_ultimo = HOJE
             atualiza_produto.criador = request.user
-            
             atualiza_orcamento = Orcamentos.objects.get(id= pk)
-            #atualiza_orcamento = OrcamentoForm(instance= orcamento_atualizar)
             atualiza_orcamento.quantidade += form.instance.quantidade
-
-            """if form.instance.quantidade > 1:
-                form.instance.valor_fornecedor = form.instance.valor_fornecedor * form.instance.quantidade
-                form.instance.valor_final = form.instance.valor_final * form.instance.quantidade
-            """
-            #atualiza_orcamento.margem = round(atualiza_orcamento.margem, 2)
             atualiza_orcamento.data_ultimo = HOJE_HORA
-
             atualiza_produto.save()
             atualiza_orcamento.save()
             novo_registro= form.save()
-            #return HttpResponse('<script>alert(' + str(  ) + ')</script>')
             return HttpResponse('<script>window.close();</script>')
             
     else:
@@ -304,8 +300,6 @@ def orcamento_registro_produto(request, pk, reg):
     form = RegOrcamentoForm(request.POST or None, instance = registro)
     if request.POST:
         if form.is_valid():
-            HOJE = date.today()
-            HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
             form.instance.data = HOJE 
             orcamento.data_ultimo = HOJE_HORA
             form.save()
@@ -325,9 +319,8 @@ def orcamento_imprimir(request, pk):
     context = {}
     total_registro = {}
     orcamento = Orcamentos.objects.get(id= pk)
-    HOJE = date.today()
-    HOJE_HORA = timezone.now().strftime('%Y-%m-%dT%H:%M')
-
+    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+    orcamento.data_ultimo = orcamento.data_ultimo.strftime('%d de %B de %Y')
     context["data"] = orcamento
     id_cliente = context["data"].cliente.id
     context["cliente"] = Clientes.objects.get(id= id_cliente)
@@ -345,6 +338,7 @@ def orcamento_imprimir(request, pk):
         total_registro[reg_obj_produto.id] = reg_obj_produto.valor_final * reg_obj_produto.quantidade
         total_margem += reg_obj_produto.margem
         quantidade_item += 1
+        reg_obj_produto.total = reg_obj_produto.valor_final * reg_obj_produto.quantidade
     if quantidade > 1:
         total_margem = total_margem / quantidade_item
 
@@ -355,6 +349,7 @@ def orcamento_imprimir(request, pk):
     context["total_final"] = total_valor_final
     context["total_margem"] = total_margem
     context["quantidade"] = quantidade
+    context["quantidade_item"] = quantidade_item
     context["total_registro"] = total_registro
 
     return render(request, 'orcamento_imprimir.html', context)
@@ -381,7 +376,6 @@ def cliente_detail(request, pk):
 
 def cliente_cadastra(request):
     context = {}
-    HOJE = date.today()
     
     if request.POST:
         form = ClienteForm(request.POST or None)
@@ -406,7 +400,6 @@ def cliente_atualiza(request, pk):
         if form.is_valid():
             #criador = models.User(pk=form.instance.criador)
             #criador = get_object_or_404(User, id=str(obj.criador))
-            HOJE = date.today()
             form.instance.data_ultimo = HOJE 
             form.save()
             return HttpResponseRedirect("/cliente/" + str(pk))
@@ -448,7 +441,6 @@ def fornecedor_detail(request, pk):
 
 def fornecedor_cadastra(request):
     context = {}
-    HOJE = date.today()
     
     if request.POST:
         form = FornecedorForm(request.POST or None)
@@ -471,9 +463,6 @@ def fornecedor_atualiza(request, pk):
     form = FornecedorForm(request.POST or None, instance = obj)
     if request.POST:
         if form.is_valid():
-            #criador = models.User(pk=form.instance.criador)
-            #criador = get_object_or_404(User, id=str(obj.criador))
-            HOJE = date.today()
             form.instance.data_ultimo = HOJE 
             form.save()
             return HttpResponseRedirect("/fornecedor/" + str(pk))
@@ -515,18 +504,10 @@ def produto_detail(request, pk):
 
 def produto_cadastra(request):
     context = {}
-    HOJE = date.today()
     
     if request.POST:
         form = ProdutoForm(request.POST or None)
         if form.is_valid():
-            #valor_final = (form.instance.valor_fornecedor * (
-                          #100/ form.instance.margem
-                          #)) / ((
-                          #100 / form.instance.margem)-1)
-            
-            #form.instance.valor_final = valor_final
-
             form.save()
             return HttpResponseRedirect('/produto')
     else:
@@ -544,11 +525,7 @@ def produto_atualiza(request, pk):
     obj = get_object_or_404(Produtos, id=pk)
     form = ProdutoForm(request.POST or None, instance = obj)
     if request.POST:
-        #form.instance.margem = "20,00"#round(form.instance.margem, 2)
-        #form.instance.valor_fornecedor = "96,00"#round(form.instance.valor_fornecedor, 2)
-        #form.instance.valor_final = "120,00"#round(form.instance.valor_final, 2)
         if form.is_valid():
-            HOJE = date.today()
             form.instance.data_ultimo = HOJE 
             form.save()
             return HttpResponseRedirect("/produto/" + str(pk))

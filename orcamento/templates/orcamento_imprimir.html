@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Orcar 0.0.1 - Beta</title>
+    <title>{{ data.id }} - {{ data.cliente }}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -14,149 +14,69 @@
     <script src="{% static 'js/base.js' %}"></script>
 </head>
 <body data-bs-theme="light">
-<div class="">
+<div>
     <table class="table">
         <thead>
             <th scope="col col-6" style="max-width: 50%;" class="text-center"><img src="{% static 'img/logo.png' %}" class="img-fluid" style="width: 200px;"></th>
-            <th scope="col col-10" style="text-align: left;"><b>Papatec Informatica e Tecnologia</b><br>(19) 3426-8000<br>(19) 99994-1818<br>Av. do Café - 867 - Paulista, Piracicaba - SP</th>
+            <th scope="col col-10" style="text-align: left;"><b>Papatec Informatica e Tecnologia</b><br>(19) 3426-8000 | (19) 99994-1818<br>Av. do Café - 867 - Paulista, Piracicaba - SP</th>
         </thead>
     </table>
     <table class="table">
         <thead>
             <th scope="col col-6" class="align-middle"><h2>Orçamento: # {{ data.id }}</h2></th>
-            <th scope="col col-6" style="text-align: right;" class="align-middle"><b>{{ data.data_ultimo }}</b></th>
+            <th scope="col col-6" style="text-align: right;" class="align-middle">Vendedor: </b>{{ data.criador.first_name }} {{ data.criador.last_name }}</b></th>
         </thead>
         <thead>
-            <th scope="col col-6"><b>Valido até: </b>{{ data.data_vencimento }}</th>
-            <th scope="col col-6" style="text-align: right;"><b>Vendedor: </b>{{ data.criador }}</th>
+            <th scope="col col-6"><b>Cliente: </b>{{ data.cliente }}</th>
+            <th scope="col col-6" style="text-align: right;"><b>Contato: </b>{{ data.cliente.contato }}</th>
+        </thead>
+        <thead>
+            <th scope="col col-12" colspan="6" class="align-middle"><b>Piracicaba, {{ data.data_ultimo }}</th>
         </thead>
     </table>
     <br><br>
-    <table class="table">
-        <thead>
+    <table class="table table-sm table-bordered border-dark">
+        <thead class="table-dark table-active">
             <th scope="col">Produto</th>
             <th scope="col">Valor Unitario</th>
             <th scope="col">Quantidade</th>
             <th scope="col">Total</th>
         </thead>
+        <tbody class="table-striped">
         {% for reg in regorcamentos %}
-        <thead>
-            <th scope="col">{{ reg.produto }}</th>
-            <th scope="col">{{ reg.preco_final }}</th>
-            <th scope="col">{{ reg.quantidade }}</th>
-            <th scope="col">{{ total_registro }}</th>
-        </thead>
+        <tr>
+            <td scope="col">{{ reg.produto }}</td>
+            <td scope="col">R$ {{ reg.valor_final }}</td>
+            <td scope="col">{{ reg.quantidade }}</td>
+            <td scope="col">R$ {{ reg.total }}</td>
+        </tr>
         {% endfor %}
+        </tbody>
     </table>
-<!--
-    <br>
-    <div class="row">
-        <div class="col col-11"><h1>Orçamento: <b>#{{ data.id }}</b></h1></div>
-        <div class="col col-1"><a href="{% url 'produto' %}"><button class="btn btn-outline-light">Imprimir</button></a></div>
-    </div>
- 
-    <table class="table table-striped">
-        <thead>
-            <th scope="col"><b>Cliente: </b></th>
-            <th scope="col">{{ cliente.nome }}</th>
-            <th scope="col">Contato: </th>
-            <th scope="col">{{ cliente.contato }}</th>
+    <table class="table table-striped table-sm table-bordered border-dark">
+        <thead class="table-dark table-active">
+            <th scope="col col-8"></th>
+            <th scope="col col-2" style="text-align: right;"># {{ quantidade }} itens</th>
+            <th scope="col col-2" style="text-align: right;">Totalizando: R$ {{ total_final }}</th>
         </thead>
+    </table>
+    {% if data.obs|default:'' != '' %}<div id="txt_obs"><b>Observações:</b><br><pre>{{ data.obs }}</pre></div>{% endif %}
+    <br><br><br><br><br><br><br>
+
+</div>
+<footer>
+    <table class="table">
         <thead>
-            <th scope="col"><b>Vencimento: </b></th>
-            <th scope="col">{{ data.data_vencimento }}</th>
-            <th scope="col">Status: </th>
-            <th scope="col">{% if e_dono == "1" %}
-                <form id="atualiza-status" method="POST">{% csrf_token %}
-                    <select id="status" name="status" class="form-control">
-                    <option value="1" {% if data.status == status_aberto  %} SELECTED {% else %} {% endif %}>Aberto</option>
-                    <option value="2" {% if data.status == status_enviado  %} SELECTED {% else %} {% endif %}>Enviado</option>
-                    <option value="3" {% if data.status == status_atrasado  %} SELECTED {% else %} {% endif %}>Atrasado</option>
-                    <option value="4" {% if data.status == status_vendido  %} SELECTED {% else %} {% endif %}>Vendido</option>
-                    <option value="5" {% if data.status == status_cancelado  %} SELECTED {% else %} {% endif %}>Cancelado</option>
-                    </select>
-                </form>{% else %} {{ data.status }} {% endif %}
+            <th scope="col col-6">Valido até: </b>{{ data.data_vencimento }}</th>
+            <th scope="col col-6" style="align-self: right;">
+                <center><b>_______________________________________</b>
+                </center>
+                <center>{{ data.criador.first_name }} {{ data.criador.last_name }}
+                </center>
             </th>
         </thead>
     </table>
-    <div class="collapse" id="mais_info">
-    <table class="table table-striped">
-        <thead>
-            <th scope="col">E-mail: </th>
-            <th scope="col">{{ cliente.email }} | {{ cliente.email2 }}</th>
-            <th scope="col">Telefone: </th>
-            <th scope="col">{{ cliente.telefone }} | {{ cliente.telefone2 }}</th>
-        </thead>
-        <thead>
-            <th scope="col">Data de criação: </th>
-            <th scope="col">{{ data.data_criacao }}</th>
-            <th scope="col">Ultima atividade: </th>
-            <th scope="col">{{ data.data_ultimo }}</th>
-        </thead>
-        <thead>
-            <th scope="col">Data do cadastro: </th>
-            <th scope="col" colspan="3">{{ data.data_criacao }}</th>
-        </thead>
-        
-        <thead>
-            <th scope="col" colspan="4">Observações: </th>
-        </thead>
-        <thead>
-            <th scope="col" colspan="4"><pre>{{ data.obs }}</pre></th>
-        </thead>
-    </table>
     <br><br>
-    <div class="container">
-        <div style="text-align: right; color: #dc3545;" >
-            {% if e_dono == "1" %}<a href="{% url 'cliente_delete' data.id %}">[ Deletar ]</a>{% endif %}
-        </div>
-    </div></div><br><br>
-    <div class="text-center"><a href="#mais_info" class="collapsed" data-bs-toggle="collapse" aria-expanded="false" aria-controls="mais_info"><div id="a_mais_info">[Mais informações]</div></a></div><br><br>
-    
-    <br>
-</div>
-<div class="container-xl">
-    <table class="table table-striped">
-        <thead class="text-center">
-            <th class="col col-11" colspan="8">Lista de Produtos</th>
-            <th class="col col-1">{% if e_dono == "1" %}<button class="btn btn-outline-light" id="orcamento_adiciona_produto">Adicionar</button>{% endif %}</th>
-        </thead>
-        <thead class="table-light">
-            <th class="col col-4" colspan="2"><b>Nome</b></th>
-            <th class="col col-1"><b>Qtd</b></th>
-            <th class="col col-1"><div style="display: ruby;"><b>Venda</b></div></th>
-            <th class="col col-1"><div style="display: ruby;"><b>Custo</b></div></th>
-            <th class="col col-1"><b>Margem</b></th>
-            <th class="col col-2" colspan="1"><b>Fornecedor</b></th>
-            {% if e_dono == "1" %}<th class="col col-1"><b>Editar</b></th>
-            <th class="col col-1"><b>Excluir</b></th>{% endif %}
-        </thead>
-        {% for reg in regorcamentos %}
-        <thead>
-            <th class="col col-4" colspan="2">{{ reg.produto }}</th>
-            <th class="col col-1">{{ reg.quantidade }}</th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ reg.valor_final }}</div></th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ reg.valor_fornecedor }}</div></th>
-            <th class="col col-1"><div style="display: ruby;">{{ reg.margem }} %</div></th>
-            <th class="col col-2" colspan="1">{{ reg.fornecedor }}</th>
-            {% if e_dono == "1" %}<th class="col col-1"><button class="btn btn-outline-secondary" onclick="criaJanela('{% url 'orcamento_registro_produto' data.id reg.id %}');"> [ ] </button></th>
-            <th class="col col-1"><button class="btn btn-outline-danger" onclick="criaJanela('{% url 'orcamento_delete_produto' data.id reg.id %}');"> X </button></th>{% endif %}
-        </thead>
-        {% endfor %}
-    </table>
-    <table class="table table-striped">
-        <thead class="table-light">
-            <th class="col col-3">---</th>
-            <th class="col col-1">Quantidade</th>
-            <th class="col col-1">{{ quantidade }}</th>
-            <th class="col col-1">Custo</th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ total_fornecedor }}</div></th>
-            <th class="col col-2">Margem média</th>
-            <th class="col col-1"><div style="display: ruby;">{{ total_margem }}%</div></th>
-            <th class="col col-1">Total</th>
-            <th class="col col-1"><div style="display: ruby;">R$ {{ total_final }}</div></th>
-        </thead>
-    </table>-->
-</div>
+</footer>
  </body>
  </html>
