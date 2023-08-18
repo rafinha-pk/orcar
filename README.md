@@ -1,6 +1,6 @@
 # Orcar - Um gerador de Orçamento em Django
 
-Esse projeto foi criado principalmente para testas as funcionalidades do Django, é meu segundo projeto em Python/Django (o primeiro foi o ToDoo do tutorial) e não havia pretenções em sua criação, mas o resultado final ficou tão interessante que achei melhor por aqui para consultas futuras.
+Esse projeto foi criado principalmente para testas as funcionalidades do Django, é meu segundo projeto em Python/Django (o primeiro foi o ToDo do tutorial) e não havia pretenções em sua criação, mas o resultado final ficou tão interessante que achei melhor por aqui para consultas futuras.
 
 
 ## ✔️ Técnicas e tecnologias utilizadas
